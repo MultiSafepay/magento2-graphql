@@ -1,1 +1,2 @@
-# magento2-internal-graphql
+# MultiSafepay plugin GraphQl support
+

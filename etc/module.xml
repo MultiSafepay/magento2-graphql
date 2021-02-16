@@ -3,6 +3,11 @@
 	<module name="MultiSafepay_ConnectGraphQl">
 		<sequence>
 			<module name="MultiSafepay_ConnectCore"/>
+            <module name="Magento_Sales"/>
+            <module name="Magento_Payment"/>
+            <module name="Magento_GraphQl"/>
+            <module name="Magento_Quote"/>
+            <module name="Magento_QuoteGraphQl"/>
 		</sequence>
 	</module>
 </config>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\QuoteGraphQl\Model\Cart\Payment\AdditionalDataProviderPool">
+        <arguments>
+            <argument name="dataProviders" xsi:type="array">
+                <item name="multisafepay_ideal" xsi:type="object">MultiSafepay\ConnectGraphQl\Model\IdealAdditionalDataProvider</item>
+                <item name="multisafepay_afterpay" xsi:type="object">MultiSafepay\ConnectGraphQl\Model\AfterpayAdditionalDataProvider</item>
+                <item name="multisafepay_directbanktransfer" xsi:type="object">MultiSafepay\ConnectGraphQl\Model\DirectBankTransferAdditionalDataProvider</item>
+                <item name="multisafepay_directdebit" xsi:type="object">MultiSafepay\ConnectGraphQl\Model\DirectDebitAdditionalDataProvider</item>
+                <item name="multisafepay_einvoicing" xsi:type="object">MultiSafepay\ConnectGraphQl\Model\EinvoicingAdditionalDataProvider</item>
+                <item name="multisafepay_in3" xsi:type="object">MultiSafepay\ConnectGraphQl\Model\In3AdditionalDataProvider</item>
+                <item name="multisafepay_payafter" xsi:type="object">MultiSafepay\ConnectGraphQl\Model\PayafterAdditionalDataProvider</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <virtualType name="MultiSafepay\ConnectGraphQl\Model\IdealAdditionalDataProvider" type="MultiSafepay\ConnectGraphQl\Model\PaymentAdditionalDataProvider">
+        <arguments>
+            <argument name="providerCode" xsi:type="const">MultiSafepay\ConnectCore\Model\Ui\Gateway\IdealConfigProvider::CODE</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MultiSafepay\ConnectGraphQl\Model\AfterpayAdditionalDataProvider" type="MultiSafepay\ConnectGraphQl\Model\PaymentAdditionalDataProvider">
+        <arguments>
+            <argument name="providerCode" xsi:type="const">MultiSafepay\ConnectCore\Model\Ui\Gateway\AfterpayConfigProvider::CODE</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MultiSafepay\ConnectGraphQl\Model\DirectBankTransferAdditionalDataProvider" type="MultiSafepay\ConnectGraphQl\Model\PaymentAdditionalDataProvider">
+        <arguments>
+            <argument name="providerCode" xsi:type="const">MultiSafepay\ConnectCore\Model\Ui\Gateway\DirectBankTransferConfigProvider::CODE</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MultiSafepay\ConnectGraphQl\Model\DirectDebitAdditionalDataProvider" type="MultiSafepay\ConnectGraphQl\Model\PaymentAdditionalDataProvider">
+        <arguments>
+            <argument name="providerCode" xsi:type="const">MultiSafepay\ConnectCore\Model\Ui\Gateway\DirectDebitConfigProvider::CODE</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MultiSafepay\ConnectGraphQl\Model\EinvoicingAdditionalDataProvider" type="MultiSafepay\ConnectGraphQl\Model\PaymentAdditionalDataProvider">
+        <arguments>
+            <argument name="providerCode" xsi:type="const">MultiSafepay\ConnectCore\Model\Ui\Gateway\EinvoicingConfigProvider::CODE</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MultiSafepay\ConnectGraphQl\Model\In3AdditionalDataProvider" type="MultiSafepay\ConnectGraphQl\Model\PaymentAdditionalDataProvider">
+        <arguments>
+            <argument name="providerCode" xsi:type="const">MultiSafepay\ConnectCore\Model\Ui\Gateway\In3ConfigProvider::CODE</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MultiSafepay\ConnectGraphQl\Model\PayafterAdditionalDataProvider" type="MultiSafepay\ConnectGraphQl\Model\PaymentAdditionalDataProvider">
+        <arguments>
+            <argument name="providerCode" xsi:type="const">MultiSafepay\ConnectCore\Model\Ui\Gateway\PayafterConfigProvider::CODE</argument>
+        </arguments>
+    </virtualType>
+</config>

@@ -1,0 +1,77 @@
+type Mutation {
+    restoreQuote(input: RestoreQuoteInput): String @doc(description:"Restore MultiSafepay quote by masked Cart ID") @resolver(class: "MultiSafepay\\ConnectGraphQl\\Model\\Resolver\\RestoreQuote")
+}
+
+type Order {
+  multisafepay_payment_url: MultisafepayPaymentUrl! @resolver(class: "MultiSafepay\\ConnectGraphQl\\Model\\Resolver\\PaymentUrl")
+}
+
+type AvailablePaymentMethod {
+    multisafepay_available_issuers: [MultisafepayIssuer!] @resolver(class: "MultiSafepay\\ConnectGraphQl\\Model\\Resolver\\Issuer\\AvailableIssuersForPaymentMethod") @doc(description: "Available issuers for payment method")
+    multisafepay_additional_data: MultisafepayAdditionalData! @resolver(class: "MultiSafepay\\ConnectGraphQl\\Model\\Resolver\\AdditionalData") @doc(description: "Retrieve additional data for current payment method or giftcard")
+}
+
+type SelectedPaymentMethod {
+    multisafepay_available_issuers: [MultisafepayIssuer!] @resolver(class: "MultiSafepay\\ConnectGraphQl\\Model\\Resolver\\Issuer\\AvailableIssuersForPaymentMethod") @doc(description: "Available issuers for current payment method")
+    multisafepay_additional_data: MultisafepayAdditionalData! @resolver(class: "MultiSafepay\\ConnectGraphQl\\Model\\Resolver\\AdditionalData") @doc(description: "Retrieve additional data for current payment method or giftcard")
+}
+
+input RestoreQuoteInput {
+    cart_id: String!
+}
+
+input PaymentMethodInput {
+    multisafepay_ideal: MultisafepayIdealInput @doc(description:"Required input for MultiSafepay iDEAL payments")
+    multisafepay_afterpay: MultisafepayIn3AfterpayInput @doc(description:"Required input for MultiSafepay Afterpay payments")
+    multisafepay_directbanktransfer: MultisafepayDirectbanktransferInput @doc(description:"Required input for Direct Bank Transfer payments")
+    multisafepay_directdebit: MultisafepayDirectdebitInput @doc(description:"Required input for Direct Debit payments")
+    multisafepay_einvoicing: MultisafepayPayafterEinvoicingInput @doc(description: "Required input type for E-Invoicing payments")
+    multisafepay_in3: MultisafepayIn3AfterpayInput @doc(description:"Required input for in3 payments")
+    multisafepay_payafter: MultisafepayPayafterEinvoicingInput @doc(description:"Required input type for Pay After Delivery payments")
+}
+
+input MultisafepayIdealInput @doc(description:"Required input for MultiSafepay iDEAL payments") {
+    issuer_id: String! @doc(description:"The iDEAL issuer id")
+}
+
+input MultisafepayIn3AfterpayInput @doc(description:"Required input for MultiSafepay Afterpay and in3 payments") {
+    date_of_birth: String! @doc(description:"Date of Birth of the customer")
+    gender: String! @doc(description:"Gender of the customer")
+}
+
+input MultisafepayPayafterEinvoicingInput @doc(description:"Required input type for E-Invoicing and Pay After Delivery payments") {
+    date_of_birth: String! @doc(description:"Date of Birth of the customer")
+    account_number: String! @doc(description:"Customer account number")
+}
+
+input MultisafepayDirectdebitInput @doc(description:"Required input for Direct Debit payments") {
+    account_holder_name: String! @doc(description:"Holder Name of the customer")
+    account_holder_iban: String! @doc(description:"Holder IBAN of the customer")
+    emandate: String! @doc(description:"Emandate of the customer")
+}
+
+input MultisafepayDirectbanktransferInput @doc(description:"Required input for Direct Bank Transfer payments") {
+    account_id: String! @doc(description:"Account ID of the customer")
+    account_holder_name: String! @doc(description:"Holder Name of the customer")
+    account_holder_city: String! @doc(description:"Holder City of the customer")
+    account_holder_country: String! @doc(description:"Holder Country of the customer")
+    account_holder_iban: String! @doc(description:"Holder IBAN of the customer")
+    account_holder_bic: String! @doc(description:"Holder BIC of the customer")
+}
+
+type MultisafepayPaymentUrl {
+    payment_url: String
+    error: String
+}
+
+type MultisafepayIssuer {
+    code: String
+    description: String
+}
+
+type MultisafepayAdditionalData {
+    image: String
+    is_preselected: Boolean
+}
+
+

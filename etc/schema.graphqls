@@ -75,9 +75,16 @@ type MultisafepayAdditionalData {
     is_preselected: Boolean
 }
 
-type PaymentMethod {
+type PaymentMethod @doc(description: "Get meta data for MultiSafepay payment methods in ScandiPWA query") {
     multisafepay_available_issuers: [MultisafepayIssuer!]
     multisafepay_additional_data: MultisafepayAdditionalData!
+}
+
+input PaymentMethodAdditionalData @doc(description: "Defines additional payment data for ScandiPWA query")  {
+    issuer_id: String!
+    date_of_birth: String!
+    gender: String!
+    account_number: String!
 }
 
 

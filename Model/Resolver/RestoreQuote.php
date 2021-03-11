@@ -73,11 +73,11 @@ class RestoreQuote implements ResolverInterface
         array $value = null,
         array $args = null
     ): string {
-        if (empty($args['input']['cart_id'])) {
+        if (empty($args['cart_id'])) {
             throw new GraphQlInputException(__('Required parameter "cart_id" is missing.'));
         }
 
-        $maskedCartId = $args['input']['cart_id'];
+        $maskedCartId = $args['cart_id'];
         $storeId = (int)$context->getExtensionAttributes()->getStore()->getId();
         $cart = $this->getQuoteByHash($maskedCartId, $context->getUserId(), $storeId);
 

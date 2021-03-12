@@ -39,7 +39,7 @@ composer require multisafepay/magento2-graphql
 
 Next, enable the module:
 ```bash
-bin/magento module:enable MultiSafepay_ConnectCore MultiSafepay_ConnectGraphQl
+bin/magento module:enable MultiSafepay_ConnectCore MultiSafepay_ConnectFrontend MultiSafepay_ConnectAdminhtml MultiSafepay_ConnectGraphQl
 ```
 
 Next, run the following commands:

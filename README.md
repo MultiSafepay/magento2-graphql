@@ -4,7 +4,7 @@
 
 # MultiSafepay plugin for Magento 2 (GraphQL-only)
 
-This is a module for MultiSafepay payments GraphQL support.
+This is a module for MultiSafepay payments GraphQl support.
 Before you get started, please read our [installation & configuration manual](https://docs.multisafepay.com/integrations/plugins/magento2/) first.
 
 ## About MultiSafepay ##

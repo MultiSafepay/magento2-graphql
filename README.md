@@ -4,7 +4,7 @@
 
 # MultiSafepay plugin for Magento 2 (GraphQL-only)
 
-This is a module for MultiSafepay payments GraphQl support.
+This is a module for MultiSafepay payments GraphQL support.
 Before you get started, please read our [installation & configuration manual](https://docs.multisafepay.com/integrations/plugins/magento2/) first.
 
 ## About MultiSafepay ##
@@ -39,7 +39,7 @@ composer require multisafepay/magento2-graphql
 
 Next, enable the module:
 ```bash
-bin/magento module:enable MultiSafepay_ConnectCore MultiSafepay_ConnectGraphQl
+bin/magento module:enable MultiSafepay_ConnectCore MultiSafepay_ConnectFrontend MultiSafepay_ConnectAdminhtml MultiSafepay_ConnectGraphQl
 ```
 
 Next, run the following commands:
@@ -136,9 +136,9 @@ mutation {
 - Request example of a new mutation of `restoreQuote` for restoring the quote by Cart ID after, for example, an unsuccessfull payment:
 ```graphql
 mutation {
-    restoreQuote(input: {
+    restoreQuote(
         cart_id: "{ CART_ID }"
-    })
+    )
 }
 
 ```

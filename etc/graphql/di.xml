@@ -56,4 +56,8 @@
             <argument name="providerCode" xsi:type="const">MultiSafepay\ConnectCore\Model\Ui\Gateway\PayafterConfigProvider::CODE</argument>
         </arguments>
     </virtualType>
+
+    <type name="ScandiPWA\QuoteGraphQl\Model\Resolver\SaveAddressInformation">
+        <plugin name="add_multisafepay_payment_meta_to_scandipwa_response" type="MultiSafepay\ConnectGraphQl\Plugin\Resolver\SaveAddressInformationPlugin"/>
+    </type>
 </config>

@@ -1,5 +1,6 @@
 type Mutation {
-    restoreQuote(input: RestoreQuoteInput): String @doc(description:"Restore MultiSafepay quote by masked Cart ID") @resolver(class: "MultiSafepay\\ConnectGraphQl\\Model\\Resolver\\RestoreQuote")
+    restoreQuote(cart_id: String!): String @doc(description:"Restore MultiSafepay quote by masked Cart ID") @resolver(class: "MultiSafepay\\ConnectGraphQl\\Model\\Resolver\\RestoreQuote")
+    getPaymentMeta(input: RestoreQuoteInput): String @doc(description:"Restore MultiSafepay quote by masked Cart ID") @resolver(class: "MultiSafepay\\ConnectGraphQl\\Model\\Resolver\\RestoreQuote")
 }
 
 type Order {
@@ -73,5 +74,25 @@ type MultisafepayAdditionalData {
     image: String
     is_preselected: Boolean
 }
+
+type PaymentMethod @doc(description: "Get meta data for MultiSafepay payment methods in ScandiPWA queries") {
+    multisafepay_available_issuers: [MultisafepayIssuer!]
+    multisafepay_additional_data: MultisafepayAdditionalData!
+}
+
+input PaymentMethodAdditionalData @doc(description: "Defines additional payment data for ScandiPWA queries")  {
+    issuer_id: String!
+    date_of_birth: String!
+    gender: String!
+    account_number: String!
+    account_holder_name: String!
+    account_holder_iban: String!
+    emandate: String!
+    account_id: String!
+    account_holder_city: String!
+    account_holder_country: String!
+    account_holder_bic: String!
+}
+
 
 

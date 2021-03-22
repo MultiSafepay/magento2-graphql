@@ -48,7 +48,6 @@ input MultisafepayPayafterEinvoicingInput @doc(description:"Required input type 
 input MultisafepayDirectdebitInput @doc(description:"Required input for Direct Debit payments") {
     account_holder_name: String! @doc(description:"Holder Name of the customer")
     account_holder_iban: String! @doc(description:"Holder IBAN of the customer")
-    emandate: String! @doc(description:"Emandate of the customer")
 }
 
 input MultisafepayDirectbanktransferInput @doc(description:"Required input for Direct Bank Transfer payments") {
@@ -87,7 +86,6 @@ input PaymentMethodAdditionalData @doc(description: "Defines additional payment 
     account_number: String!
     account_holder_name: String!
     account_holder_iban: String!
-    emandate: String!
     account_id: String!
     account_holder_city: String!
     account_holder_country: String!

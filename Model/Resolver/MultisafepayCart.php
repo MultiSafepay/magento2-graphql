@@ -12,7 +12,6 @@
  * See DISCLAIMER.md for disclaimer details.
  *
  */
-
 declare(strict_types=1);
 
 namespace MultiSafepay\ConnectGraphQl\Model\Resolver;
@@ -25,11 +24,14 @@ use Magento\Framework\GraphQl\Exception\GraphQlNoSuchEntityException;
 use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 use Magento\Quote\Api\CartRepositoryInterface;
-use Magento\Quote\Api\Data\CartInterface;
 use Magento\Quote\Model\MaskedQuoteIdToQuoteIdInterface;
-use MultiSafepay\ConnectCore\Util\PaymentMethodUtil;
+use Magento\Quote\Model\Quote;
+use Magento\QuoteGraphQl\Model\Cart\GetCartForUser;
 
-class RestoreQuote implements ResolverInterface
+/**
+ * @inheritdoc
+ */
+class MultisafepayCart implements ResolverInterface
 {
     /**
      * @var MaskedQuoteIdToQuoteIdInterface
@@ -42,104 +44,93 @@ class RestoreQuote implements ResolverInterface
     private $cartRepository;
 
     /**
-     * @var PaymentMethodUtil
-     */
-    private $paymentMethodUtil;
-
-    /**
-     * RestoreQuote constructor.
+     * MultisafepayCart constructor.
      *
      * @param MaskedQuoteIdToQuoteIdInterface $maskedQuoteIdToQuoteId
      * @param CartRepositoryInterface $cartRepository
-     * @param PaymentMethodUtil $paymentMethodUtil
      */
     public function __construct(
         MaskedQuoteIdToQuoteIdInterface $maskedQuoteIdToQuoteId,
-        CartRepositoryInterface $cartRepository,
-        PaymentMethodUtil $paymentMethodUtil
+        CartRepositoryInterface $cartRepository
     ) {
         $this->maskedQuoteIdToQuoteId = $maskedQuoteIdToQuoteId;
         $this->cartRepository = $cartRepository;
-        $this->paymentMethodUtil = $paymentMethodUtil;
     }
 
     /**
      * @inheritdoc
      */
-    public function resolve(
-        Field $field,
-        $context,
-        ResolveInfo $info,
-        array $value = null,
-        array $args = null
-    ): string {
-        if (empty($args['input']['cart_id'])) {
-            throw new GraphQlInputException(__('Required parameter "cart_id" is missing.'));
+    public function resolve(Field $field, $context, ResolveInfo $info, array $value = null, array $args = null)
+    {
+        if (empty($args['cart_id'])) {
+            throw new GraphQlInputException(__('Required parameter "cart_id" is missing'));
         }
+        $maskedCartId = $args['cart_id'];
 
-        $maskedCartId = $args['input']['cart_id'];
+        $currentUserId = $context->getUserId();
         $storeId = (int)$context->getExtensionAttributes()->getStore()->getId();
-        $cart = $this->getQuoteByHash($maskedCartId, $context->getUserId(), $storeId);
+        $cart = $this->getMultisafepayCart($maskedCartId, $currentUserId, $storeId);
 
-        if (false === (bool)$cart->getIsActive()) {
-            $this->restoreQuote($cart);
-        }
-
-        return $maskedCartId;
+        return [
+            'model' => $cart,
+        ];
     }
 
     /**
+     * Get cart for user
+     *
      * @param string $cartHash
      * @param int|null $customerId
      * @param int $storeId
-     * @return CartInterface
+     * @return Quote
      * @throws GraphQlAuthorizationException
      * @throws GraphQlNoSuchEntityException
+     * @throws NoSuchEntityException
      */
-    private function getQuoteByHash(string $cartHash, ?int $customerId, int $storeId): CartInterface
+    public function getMultisafepayCart(string $cartHash, ?int $customerId, int $storeId): Quote
     {
         try {
             $cartId = $this->maskedQuoteIdToQuoteId->execute($cartHash);
-            $cart = $this->cartRepository->get($cartId);
         } catch (NoSuchEntityException $exception) {
             throw new GraphQlNoSuchEntityException(
-                __('Could not find a cart with ID "%1"', $cartHash)
+                __('Could not find a cart with ID "%masked_cart_id"', ['masked_cart_id' => $cartHash])
             );
         }
 
-        if (!$this->paymentMethodUtil->isMultisafepayCart($cart)) {
+        try {
+            /** @var Quote $cart */
+            $cart = $this->cartRepository->get($cartId);
+        } catch (NoSuchEntityException $e) {
             throw new GraphQlNoSuchEntityException(
-                __('This cart "%1" is not using a MultiSafepay payment method', $cartHash)
-            );
-        }
-
-        $cartCustomerId = (int)$cart->getCustomerId();
-
-        if ($cartCustomerId === 0 && (null === $customerId || 0 === $customerId)) {
-            return $cart;
-        }
-
-        if ($cartCustomerId !== $customerId) {
-            throw new GraphQlAuthorizationException(
-                __('The current user cannot perform operations on cart "%1"', $cartHash)
+                __('Could not find a cart with ID "%masked_cart_id"', ['masked_cart_id' => $cartHash])
             );
         }
 
         if ((int)$cart->getStoreId() !== $storeId) {
             throw new GraphQlNoSuchEntityException(
-                __('Wrong store code specified for cart "%1"', $cartHash)
+                __(
+                    'Wrong store code specified for cart "%masked_cart_id"',
+                    ['masked_cart_id' => $cartHash]
+                )
+            );
+        }
+
+        $cartCustomerId = (int)$cart->getCustomerId();
+
+        /* Guest cart, allow operations */
+        if (0 === $cartCustomerId && (null === $customerId || 0 === $customerId)) {
+            return $cart;
+        }
+
+        if ($cartCustomerId !== $customerId) {
+            throw new GraphQlAuthorizationException(
+                __(
+                    'The current user cannot perform operations on cart "%masked_cart_id"',
+                    ['masked_cart_id' => $cartHash]
+                )
             );
         }
 
         return $cart;
-    }
-
-    /**
-     * @param CartInterface $cart
-     */
-    private function restoreQuote(CartInterface $cart): void
-    {
-        $cart->setIsActive(1)->setReservedOrderId(null);
-        $this->cartRepository->save($cart);
     }
 }

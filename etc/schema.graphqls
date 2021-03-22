@@ -1,6 +1,10 @@
 type Mutation {
-    restoreQuote(cart_id: String!): String @doc(description:"Restore MultiSafepay quote by masked Cart ID") @resolver(class: "MultiSafepay\\ConnectGraphQl\\Model\\Resolver\\RestoreQuote")
+    restoreQuote(input: RestoreQuoteInput): String @doc(description:"Restore MultiSafepay quote by masked Cart ID") @resolver(class: "MultiSafepay\\ConnectGraphQl\\Model\\Resolver\\RestoreQuote")
     getPaymentMeta(input: RestoreQuoteInput): String @doc(description:"Restore MultiSafepay quote by masked Cart ID") @resolver(class: "MultiSafepay\\ConnectGraphQl\\Model\\Resolver\\RestoreQuote")
+}
+
+type Query {
+    multisafepayCart(cart_id: String!): Cart @resolver (class: "MultiSafepay\\ConnectGraphQl\\Model\\Resolver\\MultisafepayCart") @doc(description:"Returns information about shopping cart") @cache(cacheable: false)
 }
 
 type Order {

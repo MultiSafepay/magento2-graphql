@@ -26,7 +26,7 @@ use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Model\MaskedQuoteIdToQuoteIdInterface;
 use Magento\Quote\Model\Quote;
-use Magento\QuoteGraphQl\Model\Cart\GetCartForUser;
+use MultiSafepay\ConnectCore\Util\PaymentMethodUtil;
 
 /**
  * @inheritdoc
@@ -44,17 +44,25 @@ class MultisafepayCart implements ResolverInterface
     private $cartRepository;
 
     /**
+     * @var PaymentMethodUtil
+     */
+    private $paymentMethodUtil;
+
+    /**
      * MultisafepayCart constructor.
      *
      * @param MaskedQuoteIdToQuoteIdInterface $maskedQuoteIdToQuoteId
      * @param CartRepositoryInterface $cartRepository
+     * @param PaymentMethodUtil $paymentMethodUtil
      */
     public function __construct(
         MaskedQuoteIdToQuoteIdInterface $maskedQuoteIdToQuoteId,
-        CartRepositoryInterface $cartRepository
+        CartRepositoryInterface $cartRepository,
+        PaymentMethodUtil $paymentMethodUtil
     ) {
         $this->maskedQuoteIdToQuoteId = $maskedQuoteIdToQuoteId;
         $this->cartRepository = $cartRepository;
+        $this->paymentMethodUtil = $paymentMethodUtil;
     }
 
     /**
@@ -65,6 +73,7 @@ class MultisafepayCart implements ResolverInterface
         if (empty($args['cart_id'])) {
             throw new GraphQlInputException(__('Required parameter "cart_id" is missing'));
         }
+
         $maskedCartId = $args['cart_id'];
 
         $currentUserId = $context->getUserId();
@@ -103,6 +112,15 @@ class MultisafepayCart implements ResolverInterface
         } catch (NoSuchEntityException $e) {
             throw new GraphQlNoSuchEntityException(
                 __('Could not find a cart with ID "%masked_cart_id"', ['masked_cart_id' => $cartHash])
+            );
+        }
+
+        if (!$this->paymentMethodUtil->isMultisafepayCart($cart)) {
+            throw new GraphQlNoSuchEntityException(
+                __(
+                    'The cart paid "%masked_cart_id" isn\'t with MultiSafepay payment method. ',
+                    ['masked_cart_id' => $cartHash]
+                )
             );
         }
 

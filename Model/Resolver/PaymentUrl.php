@@ -107,10 +107,10 @@ class PaymentUrl implements ResolverInterface
                 $this->logger->logPaymentLinkError($orderId, $apiException);
                 $result['error'] = $apiException->getMessage();
             } catch (Exception $exception) {
-                $this->logger->logGeneralErrorForOrder($orderId, $exception);
+                $this->logger->logExceptionForOrder($orderId, $exception);
                 $result['error'] = $exception->getMessage();
             } catch (ClientExceptionInterface $clientException) {
-                $this->logger->logGeneralErrorForOrder($orderId, $clientException);
+                $this->logger->logExceptionForOrder($orderId, $clientException);
                 $result['error'] = $clientException->getMessage();
             }
         }

@@ -86,10 +86,9 @@ class AvailablePaymentMethodsTest extends GraphQlAbstract
         self::assertArrayHasKey('available_payment_methods', $response['cart']);
         self::assertNotEmpty($response['cart']['available_payment_methods']);
 
-        $emulation = $this->emulation;
-        $emulation->startEnvironmentEmulation(1, Area::AREA_FRONTEND, true);
+        $this->emulation->startEnvironmentEmulation(1, Area::AREA_FRONTEND, true);
         $imagePath = $this->idealConfigProvider->getImage();
-        $emulation->stopEnvironmentEmulation();
+        $this->emulation->stopEnvironmentEmulation();
 
         foreach ($response['cart']['available_payment_methods'] as $paymentMethod) {
             self::assertArrayHasKey('code', $paymentMethod);

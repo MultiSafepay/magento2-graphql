@@ -27,7 +27,7 @@ use Magento\TestFramework\Helper\Bootstrap;
 use Magento\TestFramework\TestCase\GraphQl\ResponseContainsErrorsException;
 use Magento\TestFramework\TestCase\GraphQlAbstract;
 
-class RestoreQuoteTest extends GraphQlAbstract
+class RestoreQuoteTest extends BaseGraphQlTest
 {
     /**
      * @var GetMaskedQuoteIdByReservedOrderId
@@ -62,11 +62,11 @@ class RestoreQuoteTest extends GraphQlAbstract
     public function testRestoreInactiveQuoteWithFalseMaskedQuoteId(): void
     {
         $maskedQuoteId = 'not-existing-masked-quote-id';
-        $this->includeFixtureFile('set_bancontact_payment_method');
+        $this->includeFixtureFile('set_bancontact_as_payment_method');
 
         $this->expectException(ResponseContainsErrorsException::class);
         $this->expectExceptionMessage('Could not find a cart with ID ' . "\"$maskedQuoteId\"");
-        $this->getMutation($maskedQuoteId);
+        $this->restoreQuoteMutation($maskedQuoteId);
     }
 
     /**
@@ -90,7 +90,7 @@ class RestoreQuoteTest extends GraphQlAbstract
         $this->expectException(ResponseContainsErrorsException::class);
         $this->expectExceptionMessage('This cart ' . "\"$maskedQuoteId\""
                                       . ' is not using a MultiSafepay payment method');
-        $this->getMutation($maskedQuoteId);
+        $this->restoreQuoteMutation($maskedQuoteId);
     }
 
     /**
@@ -113,7 +113,7 @@ class RestoreQuoteTest extends GraphQlAbstract
         $maskedQuoteId = $this->getMaskedQuoteIdByReservedOrderId->execute($reservedOrderId);
         $this->includeFixtureFile('set_bancontact_payment_method');
 
-        $response = $this->getMutation($maskedQuoteId);
+        $response = $this->restoreQuoteMutation($maskedQuoteId);
 
         self::assertArrayHasKey('restoreQuote', $response);
         self::assertSame($maskedQuoteId, $response['restoreQuote']);
@@ -122,7 +122,7 @@ class RestoreQuoteTest extends GraphQlAbstract
     /**
      * @throws Exception
      */
-    private function getMutation($maskedQuoteId)
+    private function restoreQuoteMutation($maskedQuoteId)
     {
         return $this->graphQlMutation(
             <<<QUERY
@@ -139,27 +139,5 @@ QUERY
     protected function getObjectManager(): ObjectManagerInterface
     {
         return Bootstrap::getObjectManager();
-    }
-
-    /**
-     * @param string $fixtureFile
-     * @throws Exception
-     */
-    protected function includeFixtureFile(string $fixtureFile): void
-    {
-        /** @var ComponentRegistrar $componentRegistrar */
-        $componentRegistrar = $this->getObjectManager()->get(ComponentRegistrar::class);
-        $modulePath = $componentRegistrar->getPath('module', 'MultiSafepay_ConnectGraphQl');
-        $fixturePath = $modulePath . '/Test/Functional/_files/' . $fixtureFile . '.php';
-        if (!is_file($fixturePath)) {
-            throw new Exception('Fixture file "' . $fixturePath . '" could not be found');
-        }
-
-        $cwd = getcwd();
-        $directoryList = $this->getObjectManager()->get(DirectoryList::class);
-        $rootPath = $directoryList->getRoot();
-        chdir($rootPath . '/dev/tests/integration/testsuite/');
-        require($fixturePath);
-        chdir($cwd);
     }
 }

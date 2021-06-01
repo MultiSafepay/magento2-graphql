@@ -61,7 +61,7 @@ class PlaceOrderTest extends GraphQlAbstract
         $reservedOrderId = 'test_quote';
         $maskedQuoteId = $this->getMaskedQuoteIdByReservedOrderId->execute($reservedOrderId);
 
-        $this->setPaymentMethodOnCartMutation($maskedQuoteId);
+        $this->setBancontactPaymentMethodOnCartMutation($maskedQuoteId);
         $response = $this->getMutation($maskedQuoteId);
         $order = $response['placeOrder']['order'];
 
@@ -124,7 +124,7 @@ QUERY
     /**
      * @throws Exception
      */
-    private function setPaymentMethodOnCartMutation($maskedQuoteId): void
+    private function setBancontactPaymentMethodOnCartMutation($maskedQuoteId): void
     {
         $bancontactCode = BancontactConfigProvider::CODE;
 

@@ -62,11 +62,11 @@ class SetPaymentMethodOnCartTest extends GraphQlAbstract
     {
         $reservedOrderId = 'test_quote';
         $maskedQuoteId = $this->getMaskedQuoteIdByReservedOrderId->execute($reservedOrderId);
-
         $paymentMethods = $this->getAvailablePaymentMethodsQuery($maskedQuoteId);
+
         foreach ($paymentMethods['cart']['available_payment_methods'] as $paymentMethod) {
             if ($paymentMethod['code'] === BancontactConfigProvider::CODE) {
-                $response = $this->getMutation($maskedQuoteId);
+                $response = $this->setPaymentMethodOnCartMutation($maskedQuoteId);
 
                 $selectedPaymentMethod = $response['setPaymentMethodOnCart']['cart']['selected_payment_method'];
 
@@ -94,8 +94,8 @@ class SetPaymentMethodOnCartTest extends GraphQlAbstract
     {
         $reservedOrderId = 'test_quote';
         $maskedQuoteId = $this->getMaskedQuoteIdByReservedOrderId->execute($reservedOrderId);
-
         $paymentMethods = $this->getAvailablePaymentMethodsQuery($maskedQuoteId);
+
         foreach ($paymentMethods['cart']['available_payment_methods'] as $paymentMethod) {
             if ($paymentMethod['code'] === IdealConfigProvider::CODE) {
                 $issuerCode = reset($paymentMethod['multisafepay_available_issuers'])['code'];
@@ -132,8 +132,8 @@ class SetPaymentMethodOnCartTest extends GraphQlAbstract
     {
         $reservedOrderId = 'test_quote';
         $maskedQuoteId = $this->getMaskedQuoteIdByReservedOrderId->execute($reservedOrderId);
-
         $paymentMethods = $this->getAvailablePaymentMethodsQuery($maskedQuoteId);
+
         foreach ($paymentMethods['cart']['available_payment_methods'] as $paymentMethod) {
             if ($paymentMethod['code'] === AfterpayConfigProvider::CODE) {
 
@@ -150,7 +150,7 @@ class SetPaymentMethodOnCartTest extends GraphQlAbstract
     /**
      * @throws Exception
      */
-    private function getMutation($maskedQuoteId)
+    private function setPaymentMethodOnCartMutation($maskedQuoteId)
     {
         $bancontactCode = BancontactConfigProvider::CODE;
 

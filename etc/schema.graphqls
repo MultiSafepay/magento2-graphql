@@ -42,6 +42,7 @@ input MultisafepayIdealInput @doc(description:"Required input for MultiSafepay i
 input MultisafepayIn3AfterpayInput @doc(description:"Required input for MultiSafepay Afterpay and in3 payments") {
     date_of_birth: String! @doc(description:"Date of Birth of the customer")
     gender: String! @doc(description:"Gender of the customer")
+    phone_number: String! @doc(description:"Phone number of the customer")
 }
 
 input MultisafepayPayafterEinvoicingInput @doc(description:"Required input type for E-Invoicing and Pay After Delivery payments") {

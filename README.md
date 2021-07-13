@@ -136,10 +136,10 @@ mutation {
 - Request example of a new mutation of `restoreQuote` for restoring the quote by Cart ID after, for example, an unsuccessfull payment:
 ```graphql
 mutation {
-    restoreQuote(
+    restoreQuote(input: {
         cart_id: "{ CART_ID }"
+        } 
     )
-}
 
 ```
 

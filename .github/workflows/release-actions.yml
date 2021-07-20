@@ -37,7 +37,6 @@ jobs:
                 options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
         steps:
             -   uses: actions/checkout@v2
-            -   uses: extdn/github-actions-m2/magento-mess-detector@master
             -   name: Get Composer Cache Directory
                 id: composer-cache
                 run: |

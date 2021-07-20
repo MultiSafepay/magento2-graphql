@@ -1,3 +1,4 @@
+# phpcs:ignoreFile
 type Mutation {
     restoreQuote(input: RestoreQuoteInput): String @doc(description:"Restore MultiSafepay quote by masked Cart ID") @resolver(class: "MultiSafepay\\ConnectGraphQl\\Model\\Resolver\\RestoreQuote")
     getPaymentMeta(input: RestoreQuoteInput): String @doc(description:"Restore MultiSafepay quote by masked Cart ID") @resolver(class: "MultiSafepay\\ConnectGraphQl\\Model\\Resolver\\RestoreQuote")

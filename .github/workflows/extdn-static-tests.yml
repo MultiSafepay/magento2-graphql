@@ -1,5 +1,13 @@
 name: ExtDN Static Tests
-on: [push]
+on:
+    push:
+        branches:
+            - master
+        paths-ignore:
+            - '**.graphqls'
+    pull_request:
+        paths-ignore:
+            - '**.graphqls'
 
 jobs:
   static:

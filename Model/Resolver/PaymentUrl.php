@@ -79,6 +79,8 @@ class PaymentUrl implements ResolverInterface
      * @param array|null $value
      * @param array|null $args
      * @return string[]|null
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function resolve(
         Field $field,

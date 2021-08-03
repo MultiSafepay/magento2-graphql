@@ -65,6 +65,8 @@ class AdditionalData implements ResolverInterface
      * @param array|null $value
      * @param array|null $args
      * @return null[]
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function resolve(
         Field $field,

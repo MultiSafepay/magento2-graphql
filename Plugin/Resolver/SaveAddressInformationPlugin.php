@@ -69,6 +69,9 @@ class SaveAddressInformationPlugin
      * @param array|null $value
      * @param array|null $args
      * @return mixed|Value
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function afterResolve(
         SaveAddressInformation $subject,

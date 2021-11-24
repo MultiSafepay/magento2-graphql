@@ -43,11 +43,6 @@ class PaymentUrl implements ResolverInterface
     private $paymentLink;
 
     /**
-     * @var Logger
-     */
-    private $logger;
-
-    /**
      * @var PaymentMethodUtil
      */
     private $paymentMethodUtil;
@@ -57,18 +52,15 @@ class PaymentUrl implements ResolverInterface
      *
      * @param Session $checkoutSession
      * @param PaymentLink $paymentLink
-     * @param Logger $logger
      * @param PaymentMethodUtil $paymentMethodUtil
      */
     public function __construct(
         Session $checkoutSession,
         PaymentLink $paymentLink,
-        Logger $logger,
         PaymentMethodUtil $paymentMethodUtil
     ) {
         $this->checkoutSession = $checkoutSession;
         $this->paymentLink = $paymentLink;
-        $this->logger = $logger;
         $this->paymentMethodUtil = $paymentMethodUtil;
     }
 
@@ -97,24 +89,9 @@ class PaymentUrl implements ResolverInterface
         ];
 
         if ($orderId && $this->paymentMethodUtil->isMultisafepayOrder($order)) {
-            try {
-                $paymentUrl = $this->paymentLink->getPaymentLinkByOrder($order);
-                $this->logger->logPaymentRedirectInfo($orderId, $paymentUrl);
-                $this->paymentLink->addPaymentLink($order, $paymentUrl);
-                $result['payment_url'] = $paymentUrl;
-            } catch (InvalidApiKeyException $invalidApiKeyException) {
-                $this->logger->logInvalidApiKeyException($invalidApiKeyException);
-                $result['error'] = $invalidApiKeyException->getMessage();
-            } catch (ApiException $apiException) {
-                $this->logger->logPaymentLinkError($orderId, $apiException);
-                $result['error'] = $apiException->getMessage();
-            } catch (Exception $exception) {
-                $this->logger->logExceptionForOrder($orderId, $exception);
-                $result['error'] = $exception->getMessage();
-            } catch (ClientExceptionInterface $clientException) {
-                $this->logger->logExceptionForOrder($orderId, $clientException);
-                $result['error'] = $clientException->getMessage();
-            }
+            $paymentUrl = $this->paymentLink->getPaymentLinkFromOrder($order);
+            $result['payment_url'] = $paymentUrl;
+            $result['error'] = $paymentUrl ? '' : 'Something went wrong. Please, check the logs.';
         }
 
         return $result;

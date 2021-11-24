@@ -26,6 +26,10 @@ input RestoreQuoteInput {
     cart_id: String!
 }
 
+type CustomerOrder {
+    multisafepay_payment_url: String! @resolver(class: "MultiSafepay\\ConnectGraphQl\\Model\\Resolver\\OrderPaymentUrl")
+}
+
 input PaymentMethodInput {
     multisafepay_ideal: MultisafepayIdealInput @doc(description:"Required input for MultiSafepay iDEAL payments")
     multisafepay_afterpay: MultisafepayIn3AfterpayInput @doc(description:"Required input for MultiSafepay Afterpay payments")

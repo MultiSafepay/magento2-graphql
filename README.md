@@ -142,6 +142,24 @@ mutation {
     )
 
 ```
+- Get MultiSafepay payment url from a placed order: 
+```graphql
+query {
+    customer {
+        orders(
+            pageSize: 10
+        ) {
+            total_count
+            items {
+                id
+                increment_id
+                multisafepay_payment_url
+            }
+        }
+    }
+}
+```
+
 
 ## Support
 You can create issues on our repository. If you need any additional help or support, please contact <a href="mailto:integration@multisafepay.com">integration@multisafepay.com</a>

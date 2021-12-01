@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2021-11-30
+### Added
+- Added a query for getting the MultiSafepay payment link
+
+### Changed
+- Changed the way the payment link is retrieved from the order
+
 ## [1.1.1] - 2021-07-20
 ### Added
 - Added functional test coverage for all the queries and mutations

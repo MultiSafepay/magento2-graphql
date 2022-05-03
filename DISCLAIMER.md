@@ -7,7 +7,7 @@ needs please document your changes and make backups before you update.
 ___
 
 **author**: [Integration](integration@multisafepay.com)\
-**copyright**: Copyright &copy; 2021 MultiSafepay, Inc. (https://www.multisafepay.com)
+**copyright**: Copyright &copy; 2022 MultiSafepay, Inc. (https://www.multisafepay.com)
 ___
 
 **THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,

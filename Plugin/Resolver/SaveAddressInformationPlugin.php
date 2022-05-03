@@ -8,7 +8,7 @@
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
  *
- * Copyright © 2021 MultiSafepay, Inc. All rights reserved.
+ * Copyright © 2022 MultiSafepay, Inc. All rights reserved.
  * See DISCLAIMER.md for disclaimer details.
  *
  */

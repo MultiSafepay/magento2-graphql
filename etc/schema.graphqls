@@ -32,11 +32,11 @@ type CustomerOrder {
 
 input PaymentMethodInput {
     multisafepay_ideal: MultisafepayIdealInput @doc(description:"Required input for MultiSafepay iDEAL payments")
-    multisafepay_afterpay: MultisafepayIn3AfterpayInput @doc(description:"Required input for MultiSafepay Afterpay payments")
+    multisafepay_afterpay: MultisafepayAfterpayInput @doc(description:"Required input for MultiSafepay Afterpay payments")
     multisafepay_directbanktransfer: MultisafepayDirectbanktransferInput @doc(description:"Required input for Direct Bank Transfer payments")
     multisafepay_directdebit: MultisafepayDirectdebitInput @doc(description:"Required input for Direct Debit payments")
     multisafepay_einvoicing: MultisafepayPayafterEinvoicingInput @doc(description: "Required input type for E-Invoicing payments")
-    multisafepay_in3: MultisafepayIn3AfterpayInput @doc(description:"Required input for in3 payments")
+    multisafepay_in3: MultisafepayIn3Input @doc(description:"Required input for in3 payments")
     multisafepay_payafter: MultisafepayPayafterEinvoicingInput @doc(description:"Required input type for Pay After Delivery payments")
 }
 
@@ -44,11 +44,19 @@ input MultisafepayIdealInput @doc(description:"Required input for MultiSafepay i
     issuer_id: String! @doc(description:"The iDEAL issuer id")
 }
 
-input MultisafepayIn3AfterpayInput @doc(description:"Required input for MultiSafepay Afterpay and in3 payments") {
+input MultisafepayIn3Input @doc(description:"Required input for MultiSafepay in3 payments") {
     date_of_birth: String! @doc(description:"Date of Birth of the customer")
     gender: String! @doc(description:"Gender of the customer")
     phone_number: String! @doc(description:"Phone number of the customer")
 }
+
+input MultisafepayAfterpayInput @doc(description:"Required input for MultiSafepay Afterpay payments") {
+    date_of_birth: String! @doc(description:"Date of Birth of the customer")
+    gender: String! @doc(description:"Gender of the customer")
+    phone_number: String! @doc(description:"Phone number of the customer")
+    afterpay_terms: String! @doc(description:"Afterpay terms and conditions acceptance")
+}
+
 
 input MultisafepayPayafterEinvoicingInput @doc(description:"Required input type for E-Invoicing and Pay After Delivery payments") {
     date_of_birth: String! @doc(description:"Date of Birth of the customer")

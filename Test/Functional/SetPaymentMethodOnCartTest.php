@@ -228,7 +228,8 @@ mutation {
             code: "$afterpayCode"
             $afterpayCode: {
                 date_of_birth: "10-10-2000",
-                gender: "mr"
+                gender: "mr",
+                afterpay_terms: "1"
             }
         }
     }) {

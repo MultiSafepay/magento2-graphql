@@ -45,7 +45,7 @@ jobs:
             path: ${{ steps.composer-cache.outputs.dir }}
             key: ${{ runner.os }}-composer
       - name: M2 Integration Tests on 2.4.2
-        uses: extdn/github-actions-m2/magento-integration-tests/7.4@master
+        uses: MultiSafepay/github-actions-m2/magento-integration-tests/7.4@master
         env:
             MAGENTO_MARKETPLACE_USERNAME: ${{ secrets.MAGENTO_MARKETPLACE_USERNAME }}
             MAGENTO_MARKETPLACE_PASSWORD: ${{ secrets.MAGENTO_MARKETPLACE_PASSWORD }}

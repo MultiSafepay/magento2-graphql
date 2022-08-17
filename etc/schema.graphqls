@@ -31,7 +31,8 @@ type CustomerOrder {
 }
 
 input PaymentMethodInput {
-    multisafepay_ideal: MultisafepayIdealInput @doc(description:"Required input for MultiSafepay iDEAL payments")
+    multisafepay_ideal: MultisafepayIssuerInput @doc(description:"Required input for MultiSafepay iDEAL payments")
+    multisafepay_mybank: MultisafepayIssuerInput @doc(description:"Required input for MultiSafepay MyBank payments")
     multisafepay_afterpay: MultisafepayAfterpayInput @doc(description:"Required input for MultiSafepay Afterpay payments")
     multisafepay_directbanktransfer: MultisafepayDirectbanktransferInput @doc(description:"Required input for Direct Bank Transfer payments")
     multisafepay_directdebit: MultisafepayDirectdebitInput @doc(description:"Required input for Direct Debit payments")
@@ -40,7 +41,7 @@ input PaymentMethodInput {
     multisafepay_payafter: MultisafepayPayafterEinvoicingInput @doc(description:"Required input type for Pay After Delivery payments")
 }
 
-input MultisafepayIdealInput @doc(description:"Required input for MultiSafepay iDEAL payments") {
+input MultisafepayIssuerInput @doc(description:"Required input for MultiSafepay iDEAL and MultiSafepay MyBank payments") {
     issuer_id: String! @doc(description:"The iDEAL issuer id")
 }
 

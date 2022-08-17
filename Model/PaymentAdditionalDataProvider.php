@@ -19,7 +19,9 @@ namespace MultiSafepay\ConnectGraphQl\Model;
 
 use Magento\Framework\GraphQl\Exception\GraphQlInputException;
 use Magento\QuoteGraphQl\Model\Cart\Payment\AdditionalDataProviderInterface;
+use MultiSafepay\Api\Issuers\Issuer;
 use MultiSafepay\ConnectCore\Model\Ui\Gateway\IdealConfigProvider;
+use MultiSafepay\ConnectCore\Model\Ui\Gateway\MyBankConfigProvider;
 use Psr\Http\Client\ClientExceptionInterface;
 
 class PaymentAdditionalDataProvider implements AdditionalDataProviderInterface
@@ -30,6 +32,11 @@ class PaymentAdditionalDataProvider implements AdditionalDataProviderInterface
     private $idealConfigProvider;
 
     /**
+     * @var MyBankConfigProvider
+     */
+    private $myBankConfigProvider;
+
+    /**
      * @var string
      */
     private $providerCode;
@@ -38,13 +45,16 @@ class PaymentAdditionalDataProvider implements AdditionalDataProviderInterface
      * PaymentAdditionalDataProvider constructor.
      *
      * @param IdealConfigProvider $idealConfigProvider
+     * @param MyBankConfigProvider $myBankConfigProvider
      * @param string $providerCode
      */
     public function __construct(
         IdealConfigProvider $idealConfigProvider,
+        MyBankConfigProvider $myBankConfigProvider,
         $providerCode = ''
     ) {
         $this->idealConfigProvider = $idealConfigProvider;
+        $this->myBankConfigProvider = $myBankConfigProvider;
         $this->providerCode = $providerCode;
     }
 
@@ -67,7 +77,7 @@ class PaymentAdditionalDataProvider implements AdditionalDataProviderInterface
 
         $additionalData = $data[$this->providerCode];
 
-        if ($this->providerCode === IdealConfigProvider::CODE) {
+        if ($this->providerCode === IdealConfigProvider::CODE || $this->providerCode === MyBankConfigProvider::CODE) {
             $this->validateIssuerId($additionalData);
         }
 
@@ -83,12 +93,22 @@ class PaymentAdditionalDataProvider implements AdditionalDataProviderInterface
     {
         $issuerId = $data['issuer_id'] ?? null;
 
-        if ($issuerId) {
-            $allIssuers = $this->idealConfigProvider->getIssuers();
+        if (!$issuerId) {
+            return;
+        }
 
-            if (!in_array($issuerId, array_column($allIssuers, 'code'), true)) {
-                throw new GraphQlInputException(__('Please check and set the correct Issuer ID.'));
-            }
+        $issuers = [];
+
+        if ($this->providerCode === IdealConfigProvider::CODE) {
+            $issuers = $this->idealConfigProvider->getIssuers();
+        }
+
+        if ($this->providerCode === MyBankConfigProvider::CODE) {
+            $issuers = $this->myBankConfigProvider->getIssuers();
+        }
+
+        if (!in_array($issuerId, array_column($issuers, 'code'), true)) {
+            throw new GraphQlInputException(__('Please check and set the correct Issuer ID.'));
         }
     }
 }

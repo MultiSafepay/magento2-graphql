@@ -21,6 +21,7 @@ use Magento\Framework\GraphQl\Query\Resolver\ContextInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 use MultiSafepay\ConnectCore\Model\Ui\ConfigProviderPool;
 use MultiSafepay\ConnectCore\Util\PaymentMethodUtil;
+use MultiSafepay\Api\Issuers\Issuer;
 
 class AvailableIssuersForPaymentMethod implements ResolverInterface
 {
@@ -71,9 +72,14 @@ class AvailableIssuersForPaymentMethod implements ResolverInterface
             return null;
         }
 
-        if ($configProvider = $this->configProviderPool->getConfigProviderByCode($method)) {
-            return method_exists($configProvider, 'getIssuers')
-                ? $configProvider->getIssuers() : null;
+        $configProvider = $this->configProviderPool->getConfigProviderByCode($method);
+
+        if (!$configProvider) {
+            return null;
+        }
+
+        if (in_array(strtolower($configProvider->getGatewayCode()), Issuer::ALLOWED_GATEWAY_CODES, true)) {
+            return $configProvider->getIssuers();
         }
 
         return null;

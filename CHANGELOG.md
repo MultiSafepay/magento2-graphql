@@ -5,6 +5,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [3.0.0] - 2022-08-23
+### Added
+- Added the MyBank payment method
+
+### Changed
+- Changed the input for iDEAL issuers to be identical to the MyBank issuers
+
 ## [2.0.0] - 2022-05-04
 ### Added
 - Added required parameter afterpay_terms for the AfterPay gateway

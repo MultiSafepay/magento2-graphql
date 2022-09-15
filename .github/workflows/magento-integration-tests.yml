@@ -36,20 +36,13 @@ jobs:
         options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
       - uses: actions/checkout@v2
-      - name: Get Composer Cache Directory
-        id: composer-cache
-        run: |
-          echo "::set-output name=dir::$(composer -g config cache-files-dir)"
-      - uses: actions/cache@v2
-        with:
-            path: ${{ steps.composer-cache.outputs.dir }}
-            key: ${{ runner.os }}-composer
       - name: M2 Integration Tests on 2.4.3-p1
-        uses: MultiSafepay/github-actions-m2/magento-integration-tests/7.4@master
+        uses: MultiSafepay/github-actions-m2/magento-integration-tests/7.4@with-coverage-support
         env:
             MAGENTO_MARKETPLACE_USERNAME: ${{ secrets.MAGENTO_MARKETPLACE_USERNAME }}
             MAGENTO_MARKETPLACE_PASSWORD: ${{ secrets.MAGENTO_MARKETPLACE_PASSWORD }}
             GLOBAL_GITHUB_TOKEN: ${{ secrets.GLOBAL_GITHUB_TOKEN }}
+            CURRENT_HEAD_REF: ${{ github.event.pull_request.head.ref }}
         with:
             module_name: MultiSafepay_ConnectGraphQl
             composer_name: multisafepay/magento2-graphql

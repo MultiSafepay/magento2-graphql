@@ -36,9 +36,9 @@ input PaymentMethodInput {
     multisafepay_afterpay: MultisafepayAfterpayInput @doc(description:"Required input for MultiSafepay Afterpay payments")
     multisafepay_directbanktransfer: MultisafepayDirectbanktransferInput @doc(description:"Required input for Direct Bank Transfer payments")
     multisafepay_directdebit: MultisafepayDirectdebitInput @doc(description:"Required input for Direct Debit payments")
-    multisafepay_einvoicing: MultisafepayPayafterEinvoicingInput @doc(description: "Required input type for E-Invoicing payments")
+    multisafepay_einvoicing: MultisafepayEinvoicingInput @doc(description: "Required input type for E-Invoicing payments")
     multisafepay_in3: MultisafepayIn3Input @doc(description:"Required input for in3 payments")
-    multisafepay_payafter: MultisafepayPayafterEinvoicingInput @doc(description:"Required input type for Pay After Delivery payments")
+    multisafepay_payafter: MultisafepayPayafterInput @doc(description:"Required input type for Pay After Delivery payments")
 }
 
 input MultisafepayIssuerInput @doc(description:"Required input for MultiSafepay iDEAL and MultiSafepay MyBank payments") {
@@ -59,9 +59,15 @@ input MultisafepayAfterpayInput @doc(description:"Required input for MultiSafepa
 }
 
 
-input MultisafepayPayafterEinvoicingInput @doc(description:"Required input type for E-Invoicing and Pay After Delivery payments") {
+input MultisafepayPayafterInput @doc(description:"Required input type for Pay After Delivery payments") {
     date_of_birth: String! @doc(description:"Date of Birth of the customer")
     account_number: String! @doc(description:"Customer account number")
+}
+
+input MultisafepayEinvoicingInput @doc(description:"Required input type for E-Invoicing payments") {
+    date_of_birth: String @doc(description:"Date of Birth of the customer")
+    account_number: String @doc(description:"Customer account number")
+    email_address: String @doc(description:"Customer email address")
 }
 
 input MultisafepayDirectdebitInput @doc(description:"Required input for Direct Debit payments") {

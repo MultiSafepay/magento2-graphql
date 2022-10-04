@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.1.0] - 2022-10-04
+### Changed
+- Made the fields for E-invoicing optional.
+
 ## [3.0.0] - 2022-08-23
 ### Added
 - Added the MyBank payment method

@@ -11,4 +11,14 @@
             </argument>
         </arguments>
     </virtualType>
+    <type name="MultiSafepay\ConnectGraphQl\Plugin\Resolver\PlaceOrder">
+        <arguments>
+            <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="MultiSafepay\ConnectGraphQl\Observer\OrderRequest">
+        <arguments>
+            <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session\Proxy</argument>
+        </arguments>
+    </type>
 </config>

@@ -117,5 +117,10 @@ input PaymentMethodAdditionalData @doc(description: "Defines additional payment 
     account_holder_bic: String!
 }
 
-
+input PlaceOrderInput @doc(description: "Specifies the quote to be converted to an order.") {
+    cart_id: String! @doc(description: "The unique ID of a `Cart` object.")
+    application_name: String @doc(description: "Application name")
+    application_version: String @doc(description: "Application version")
+    plugin_version: String @doc(description: "Plugin version")
+}
 

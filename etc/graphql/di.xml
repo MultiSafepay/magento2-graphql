@@ -67,4 +67,7 @@
     <type name="ScandiPWA\QuoteGraphQl\Model\Resolver\SaveAddressInformation">
         <plugin name="add_multisafepay_payment_meta_to_scandipwa_response" type="MultiSafepay\ConnectGraphQl\Plugin\Resolver\SaveAddressInformationPlugin"/>
     </type>
+    <type name="Magento\QuoteGraphQl\Model\Resolver\PlaceOrder">
+        <plugin name="add_multisafepay_plugin_info_meta_to_checkout_session" type="MultiSafepay\ConnectGraphQl\Plugin\Resolver\PlaceOrder"/>
+    </type>
 </config>

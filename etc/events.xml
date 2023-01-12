@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="before_send_multisafepay_order_request">
+        <observer name="multisafepay_graphql_order_request"
+                  instance="MultiSafepay\ConnectGraphQl\Observer\OrderRequest" />
+    </event>
+</config>

@@ -17,26 +17,17 @@ declare(strict_types=1);
 
 namespace MultiSafepay\ConnectGraphQl\Model\Resolver;
 
-use Exception;
-use Magento\Checkout\Model\Session;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Query\ResolverInterface;
-use Magento\Framework\GraphQl\Query\Resolver\ContextInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 use MultiSafepay\ConnectCore\Logger\Logger;
 use MultiSafepay\ConnectCore\Service\PaymentLink;
+use MultiSafepay\ConnectCore\Util\OrderUtil;
 use MultiSafepay\ConnectCore\Util\PaymentMethodUtil;
-use MultiSafepay\Exception\ApiException;
-use MultiSafepay\Exception\InvalidApiKeyException;
-use Psr\Http\Client\ClientExceptionInterface;
 
 class PaymentUrl implements ResolverInterface
 {
-    /**
-     * @var Session
-     */
-    private $checkoutSession;
-
     /**
      * @var PaymentLink
      */
@@ -48,28 +39,40 @@ class PaymentUrl implements ResolverInterface
     private $paymentMethodUtil;
 
     /**
-     * PaymentUrl constructor.
-     *
-     * @param Session $checkoutSession
+     * @var OrderUtil
+     */
+    private $orderUtil;
+
+    /**
+     * @var Logger
+     */
+    private $logger;
+
+    /**
      * @param PaymentLink $paymentLink
      * @param PaymentMethodUtil $paymentMethodUtil
+     * @param OrderUtil $orderUtil
+     * @param Logger $logger
      */
     public function __construct(
-        Session $checkoutSession,
         PaymentLink $paymentLink,
-        PaymentMethodUtil $paymentMethodUtil
+        PaymentMethodUtil $paymentMethodUtil,
+        OrderUtil $orderUtil,
+        Logger $logger
     ) {
-        $this->checkoutSession = $checkoutSession;
         $this->paymentLink = $paymentLink;
         $this->paymentMethodUtil = $paymentMethodUtil;
+        $this->orderUtil = $orderUtil;
+        $this->logger = $logger;
     }
 
     /**
      * @param Field $field
-     * @param ContextInterface $context
+     * @param $context
      * @param ResolveInfo $info
      * @param array|null $value
      * @param array|null $args
+     *
      * @return string[]|null
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -81,12 +84,23 @@ class PaymentUrl implements ResolverInterface
         array $value = null,
         array $args = null
     ): ?array {
-        $order = $this->checkoutSession->getLastRealOrder();
-        $orderId = $order->getRealOrderId();
         $result = [
             'payment_url' => '',
             'error' => ''
         ];
+
+        if (!array_key_exists('order_number', $value)) {
+            return $result;
+        }
+
+        try {
+            $order = $this->orderUtil->getOrderByIncrementId($value['order_number']);
+        } catch (NoSuchEntityException $noSuchEntityException) {
+            $this->logger->logException($noSuchEntityException);
+            return $result;
+        }
+
+        $orderId = $order->getEntityId();
 
         if ($orderId && $this->paymentMethodUtil->isMultisafepayOrder($order)) {
             $paymentUrl = $this->paymentLink->getPaymentLinkFromOrder($order);

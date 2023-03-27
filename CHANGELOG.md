@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.2.0] - 2023-03-27
+
+### Added
+- Add to the plugin info object, within the order request, information about the integration
+
+### Changed
+- Fixed an issue where in rare cases, retrieve information from the checkout session could be unreliable in a GraphQL request
+
 ## [3.1.0] - 2022-10-04
 ### Changed
 - Made the fields for E-invoicing optional.

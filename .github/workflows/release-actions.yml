@@ -58,7 +58,7 @@ jobs:
                     magento_pre_install_script: .github/workflows/magento-integration-tests-pre-install.sh
                     magento_post_install_script: .github/workflows/magento-integration-tests-post-install.sh
             -   name: Get Release Version
-                run: echo "::set-output name=version::$(echo ${{github.head_ref}} | cut -c 9-)"
+                run: echo "::set-output name=version::$(cat composer.json | grep version | awk -F'\"' '{print $4}')"
                 id: version
             -   name: Get Changelog Entry
                 id: changelog_reader

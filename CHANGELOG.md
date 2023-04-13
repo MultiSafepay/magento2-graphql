@@ -6,8 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [3.2.0] - 2023-03-27
+## [3.3.0] - 2023-04-13
+### Added
+- Add compatibility with ^3.0 version of core module and ^2.0 of frontend module
 
+## [3.2.0] - 2023-03-27
 ### Added
 - Add to the plugin info object, within the order request, information about the integration
 

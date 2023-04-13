@@ -1,11 +1,11 @@
 {
     "name": "multisafepay/magento2-graphql",
     "description": "MultiSafepay module for Magento 2 GraphQl support",
-    "version": "3.2.0",
+    "version": "3.3.0",
     "require": {
         "php": ">=7.1",
         "multisafepay/magento2-core": "^2.21 | ^3.0",
-        "multisafepay/magento2-frontend": "^1.19 |^2.0",
+        "multisafepay/magento2-frontend": "^1.19 | ^2.0",
         "multisafepay/magento2-adminhtml": "^1.22",
         "magento/framework": "103.0.*",
         "magento/module-sales": "103.0.*",

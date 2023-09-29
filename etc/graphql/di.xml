@@ -12,6 +12,11 @@
                 <item name="multisafepay_einvoicing" xsi:type="object">MultiSafepay\ConnectGraphQl\Model\EinvoicingAdditionalDataProvider</item>
                 <item name="multisafepay_in3" xsi:type="object">MultiSafepay\ConnectGraphQl\Model\In3AdditionalDataProvider</item>
                 <item name="multisafepay_payafter" xsi:type="object">MultiSafepay\ConnectGraphQl\Model\PayafterAdditionalDataProvider</item>
+                <item name="multisafepay_creditcard" xsi:type="object">MultiSafepay\ConnectGraphQl\Model\PaymentComponentAdditionalDataProvider</item>
+                <item name="multisafepay_mastercard" xsi:type="object">MultiSafepay\ConnectGraphQl\Model\PaymentComponentAdditionalDataProvider</item>
+                <item name="multisafepay_visa" xsi:type="object">MultiSafepay\ConnectGraphQl\Model\PaymentComponentAdditionalDataProvider</item>
+                <item name="multisafepay_amex" xsi:type="object">MultiSafepay\ConnectGraphQl\Model\PaymentComponentAdditionalDataProvider</item>
+                <item name="multisafepay_maestro" xsi:type="object">MultiSafepay\ConnectGraphQl\Model\PaymentComponentAdditionalDataProvider</item>
             </argument>
         </arguments>
     </type>
@@ -64,10 +69,19 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="MultiSafepay\ConnectGraphQl\Model\PaymentComponentAdditionalDataProvider" type="MultiSafepay\ConnectGraphQl\Model\PaymentAdditionalDataProvider">
+        <arguments>
+            <argument name="providerCode" xsi:type="const">MultiSafepay\ConnectCore\Model\Ui\Gateway\CreditCardConfigProvider::CODE</argument>
+        </arguments>
+    </virtualType>
+
     <type name="ScandiPWA\QuoteGraphQl\Model\Resolver\SaveAddressInformation">
         <plugin name="add_multisafepay_payment_meta_to_scandipwa_response" type="MultiSafepay\ConnectGraphQl\Plugin\Resolver\SaveAddressInformationPlugin"/>
     </type>
     <type name="Magento\QuoteGraphQl\Model\Resolver\PlaceOrder">
         <plugin name="add_multisafepay_plugin_info_meta_to_checkout_session" type="MultiSafepay\ConnectGraphQl\Plugin\Resolver\PlaceOrder"/>
+    </type>
+    <type name="MultiSafepay\ConnectGraphQl\Model\Resolver\PaymentUrl">
+        <plugin name="update_payment_url" type="MultiSafepay\ConnectGraphQl\Plugin\Resolver\PaymentUrl"/>
     </type>
 </config>

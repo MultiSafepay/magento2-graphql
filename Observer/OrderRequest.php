@@ -18,6 +18,9 @@ use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use MultiSafepay\ConnectCore\Logger\Logger;
 use Magento\Checkout\Model\Session as CheckoutSession;
+use Magento\Payment\Gateway\Config\Config;
+use MultiSafepay\ConnectAdminhtml\Model\Config\Source\PaymentTypes;
+use MultiSafepay\ConnectCore\Model\Api\Builder\OrderRequestBuilder\TransactionTypeBuilder;
 
 class OrderRequest implements ObserverInterface
 {
@@ -47,6 +50,11 @@ class OrderRequest implements ObserverInterface
     private $checkoutSession;
 
     /**
+     * @var Config
+     */
+    private $config;
+
+    /**
      * OrderRequest constructor.
      *
      * @param CheckoutSession $checkoutSession
@@ -54,10 +62,12 @@ class OrderRequest implements ObserverInterface
      */
     public function __construct(
         CheckoutSession $checkoutSession,
-        Logger $logger
+        Logger $logger,
+        Config $config
     ) {
         $this->checkoutSession = $checkoutSession;
         $this->logger = $logger;
+        $this->config = $config;
     }
 
     /**
@@ -101,6 +111,10 @@ class OrderRequest implements ObserverInterface
             $pluginDetails->addApplicationVersion(
                 $applicationVersion . ' - ' . $pluginInfo[self::APPLICATION_VERSION_KEY]
             );
+        }
+
+        if ($this->config->getValue('payment_type') === PaymentTypes::PAYMENT_COMPONENT_PAYMENT_TYPE) {
+            $orderRequest->addType(TransactionTypeBuilder::TRANSACTION_TYPE_DIRECT_VALUE);
         }
     }
 

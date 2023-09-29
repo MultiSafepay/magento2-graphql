@@ -6,6 +6,7 @@ type Mutation {
 
 type Query {
     multisafepayCart(cart_id: String!): Cart @resolver (class: "MultiSafepay\\ConnectGraphQl\\Model\\Resolver\\MultisafepayCart") @doc(description:"Returns information about shopping cart") @cache(cacheable: false)
+    multisafepayPaymentComponentData(cart_id: String!): MultisafepayPaymentDataOutput @resolver(class: "MultiSafepay\\ConnectGraphQl\\Model\\Resolver\\PaymentComponentData") @cache(cacheable: false)
 }
 
 type Order {
@@ -39,6 +40,11 @@ input PaymentMethodInput {
     multisafepay_einvoicing: MultisafepayEinvoicingInput @doc(description: "Required input type for E-Invoicing payments")
     multisafepay_in3: MultisafepayIn3Input @doc(description:"Required input for in3 payments")
     multisafepay_payafter: MultisafepayPayafterInput @doc(description:"Required input type for Pay After Delivery payments")
+    multisafepay_creditcard: MultisafepayPaymentComponentInput @doc(description:"Required input for Credit Card payments")
+    multisafepay_maestro: MultisafepayPaymentComponentInput @doc(description:"Required input for Maestro payments")
+    multisafepay_visa: MultisafepayPaymentComponentInput @doc(description:"Required input for Visa payments")
+    multisafepay_amex: MultisafepayPaymentComponentInput @doc(description:"Required input for Amex payments")
+    multisafepay_mastercard: MultisafepayPaymentComponentInput @doc(description:"Required input for Mastercard payments")
 }
 
 input MultisafepayIssuerInput @doc(description:"Required input for MultiSafepay iDEAL and MultiSafepay MyBank payments") {
@@ -124,3 +130,39 @@ input PlaceOrderInput @doc(description: "Specifies the quote to be converted to 
     plugin_version: String @doc(description: "Plugin version")
 }
 
+input MultisafepayPaymentComponentInput @doc(description:"Required input for Payment Component") {
+    payload: String! @doc(description:"Payload")
+}
+
+type CardTypes
+{
+    type: String
+}
+
+type AdditionalInfo
+{
+    vaultCode: String
+    image: String
+    is_preselected: Boolean
+}
+
+type CardsConfig
+{
+    paymentMethod: String
+    gatewayCode: String
+    paymentType: String
+    customerReference: Int
+    additionalInfo: AdditionalInfo
+}
+
+type MultisafepayPaymentDataOutput
+{
+    enabled: Boolean
+    environment: String
+    locale: String
+    cartTotal: Float
+    currency: String
+    cardsConfig: [CardsConfig]
+    apiToken: String
+    isDebug: Boolean
+}

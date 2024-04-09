@@ -73,7 +73,7 @@ query {
     }
 }
 ```
-- setPaymentMethodOnCart query example:
+- setPaymentMethodOnCart query with issuers example:
 ```graphql
 mutation {
     setPaymentMethodOnCart(input: {
@@ -82,6 +82,92 @@ mutation {
             code: "multisafepay_ideal"
             multisafepay_ideal: {
                 issuer_id: "3151"
+            }
+        }
+    }) {
+        cart {
+            selected_payment_method {
+                code
+                multisafepay_additional_data {
+                    image
+                    is_preselected
+                }
+            }
+        }
+    }
+}
+```
+- To retrieve MultiSafepay request data which includes information about Payment Component, Apple Pay or/and Google Pay, you can use the following query:
+```graphql
+query MultisafepayPaymentRequestData {
+    multisafepayPaymentRequestData(cart_id: { CART_ID }) {
+        apiToken
+        apiTokenLifeTime
+        cartTotal
+        currency
+        environment
+        locale
+        paymentComponentContainerId
+        payment_component_template_id
+        storeId
+        applePayButton {
+            applePayButtonId
+            getMerchantSessionUrl
+            isActive
+            additionalTotalItems {
+                amount
+                label
+            }
+            cartItems {
+                label
+                price
+            }
+        }
+        googlePayButton {
+            accountId
+            googlePayButtonId
+            isActive
+            mode
+            merchantInfo {
+                merchantId
+                merchantName
+            }
+        }
+        paymentComponentConfig {
+            gatewayCode
+            paymentMethod
+            paymentType
+            additionalInfo {
+                image
+                is_preselected
+                vaultCode
+            }
+            tokens {
+                bin
+                code
+                display
+                expired
+                expiry_date
+                last4
+                model
+                name_holder
+                token
+            }
+        }
+    }
+}
+```
+
+- setPaymentMethodOnCart query with payment component payload example: (for more information on how to retrieve the payload, see the [MultiSafepay documentation](https://docs.multisafepay.com/docs/payment-component-single/))
+```graphql
+mutation {
+    setPaymentMethodOnCart(input: {
+        cart_id: "{ CART_ID }"
+        payment_method: {
+            code: "multisafepay_creditcard"
+            multisafepay_creditcard: {
+                payload: "xxxx"
+                tokenize: true
             }
         }
     }) {

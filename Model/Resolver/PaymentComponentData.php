@@ -23,11 +23,8 @@ use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 use Magento\Quote\Model\MaskedQuoteIdToQuoteId;
-use MultiSafepay\ConnectCore\Model\Ui\GenericConfigProvider;
+use MultiSafepay\ConnectCore\CustomerData\PaymentRequest;
 use Magento\Checkout\Model\Session as CheckoutSession;
-use MultiSafepay\ConnectCore\Config\Config;
-use Magento\Framework\Locale\ResolverInterface as LocaleResolverInterface;
-use MultiSafepay\ConnectGraphQl\Model\PaymentConfig;
 
 class PaymentComponentData implements ResolverInterface
 {
@@ -42,47 +39,23 @@ class PaymentComponentData implements ResolverInterface
     private $maskedQuoteIdToQuoteId;
 
     /**
-     * @var Config
+     * @var PaymentRequest
      */
-    private $config;
-
-    /**
-     * @var LocaleResolverInterface
-     */
-    private $localeResolver;
-
-    /**
-     * @var GenericConfigProvider
-     */
-    private $genericConfigProvider;
-
-    /**
-     * @var PaymentConfig
-     */
-    private $paymentConfig;
+    private $paymentRequest;
 
     /**
      * @param CheckoutSession $checkoutSession
      * @param MaskedQuoteIdToQuoteId $maskedQuoteIdToQuoteId
-     * @param Config $config
-     * @param LocaleResolverInterface $localeResolver
-     * @param GenericConfigProvider $genericConfigProvider
-     * @param PaymentConfig $paymentConfig
+     * @param PaymentRequest $paymentRequest
      */
     public function __construct(
         CheckoutSession $checkoutSession,
         MaskedQuoteIdToQuoteId $maskedQuoteIdToQuoteId,
-        Config $config,
-        LocaleResolverInterface $localeResolver,
-        GenericConfigProvider $genericConfigProvider,
-        PaymentConfig $paymentConfig
+        PaymentRequest $paymentRequest
     ) {
         $this->checkoutSession = $checkoutSession;
         $this->maskedQuoteIdToQuoteId = $maskedQuoteIdToQuoteId;
-        $this->config = $config;
-        $this->localeResolver = $localeResolver;
-        $this->genericConfigProvider = $genericConfigProvider;
-        $this->paymentConfig = $paymentConfig;
+        $this->paymentRequest = $paymentRequest;
     }
 
     /**
@@ -104,46 +77,6 @@ class PaymentComponentData implements ResolverInterface
         $maskedCartId = $args['cart_id'];
         $cartId = $this->maskedQuoteIdToQuoteId->execute($maskedCartId);
         $this->checkoutSession->setQuoteId($cartId);
-        $sectionData = $this->getSectionData();
-
-        return $sectionData;
-    }
-
-    /**
-     * @return array|false[]
-     *
-     * @throws LocalizedException
-     * @throws NoSuchEntityException
-     */
-    private function getSectionData(): array
-    {
-        try {
-            $quote = $this->checkoutSession->getQuote();
-            $storeId = (int) $quote->getStoreId();
-            $result = [
-                "enabled" => false,
-                "environment" => $this->config->isLiveMode($storeId) ? 'live' : 'test',
-                "locale" => $this->localeResolver->getLocale(),
-                "cartTotal" => $quote->getGrandTotal(),
-                "currency" => $this->paymentConfig->getCurrency(),
-            ];
-
-            if ($cardsConfig = $this->paymentConfig->getCardsConfig($storeId)) {
-                $result = array_merge(
-                    $result,
-                    [
-                        "enabled" => true,
-                        "cardsConfig" => $cardsConfig,
-                        'apiToken' => $this->genericConfigProvider->getApiToken($storeId)
-                    ]
-                );
-            }
-            $result['isDebug'] = $this->config->isDebug($storeId);
-        } catch (Exception $exception) {
-            $this->logger->logPaymentRequestGetCustomerDataException($exception);
-            $result = $result ?? ["enabled" => false];
-        }
-
-        return $result;
+        return $this->paymentRequest->getSectionData();
     }
 }

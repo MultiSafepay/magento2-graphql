@@ -6,7 +6,7 @@ type Mutation {
 
 type Query {
     multisafepayCart(cart_id: String!): Cart @resolver (class: "MultiSafepay\\ConnectGraphQl\\Model\\Resolver\\MultisafepayCart") @doc(description:"Returns information about shopping cart") @cache(cacheable: false)
-    multisafepayPaymentComponentData(cart_id: String!): MultisafepayPaymentDataOutput @resolver(class: "MultiSafepay\\ConnectGraphQl\\Model\\Resolver\\PaymentComponentData") @cache(cacheable: false)
+    multisafepayPaymentRequestData(cart_id: String!): MultisafepayPaymentRequestDataOutput @resolver(class: "MultiSafepay\\ConnectGraphQl\\Model\\Resolver\\PaymentComponentData") @cache(cacheable: false)
 }
 
 type Order {
@@ -130,37 +130,86 @@ input PlaceOrderInput @doc(description: "Specifies the quote to be converted to 
 
 input MultisafepayPaymentComponentInput @doc(description:"Required input for Payment Component") {
     payload: String! @doc(description:"Payload")
+    tokenize: Boolean! @doc(description:"Tokenization enabled")
 }
 
-type CardTypes
-{
-    type: String
-}
-
-type AdditionalInfo
+type MultiSafepayPaymentComponentAdditionalInfo
 {
     vaultCode: String
     image: String
     is_preselected: Boolean
 }
 
-type CardsConfig
+type MultiSafepayToken
+{
+    token: String
+    code: String
+    display: String
+    bin: Int
+    name_holder: String
+    expiry_date: Int
+    expired: Boolean
+    last4: Int
+    model: String
+}
+
+type MultiSafepayPaymentComponentConfig
 {
     paymentMethod: String
     gatewayCode: String
     paymentType: String
-    customerReference: Int
-    additionalInfo: AdditionalInfo
+    tokens: [MultiSafepayToken]
+    additionalInfo: MultiSafepayPaymentComponentAdditionalInfo
 }
 
-type MultisafepayPaymentDataOutput
+type MultiSafepayApplePayButton
 {
-    enabled: Boolean
+    isActive: Boolean
+    applePayButtonId: String
+    getMerchantSessionUrl: String
+    cartItems: [MultiSafepayApplePayCartItem]
+    additionalTotalItems: [MultiSafepayApplePayAdditionalTotalItem]
+}
+
+type MultiSafepayGooglePayButton
+{
+    isActive: Boolean
+    googlePayButtonId: String
+    mode: String
+    accountId: String
+    merchantInfo: MultiSafepayMerchantInfo
+}
+
+type MultiSafepayApplePayCartItem
+{
+    label: String
+    price: Float
+}
+
+type MultiSafepayApplePayAdditionalTotalItem
+{
+    label: String
+    amount: String
+}
+
+type MultiSafepayMerchantInfo
+{
+    merchantName: String
+    merchantId: String
+}
+
+type MultisafepayPaymentRequestDataOutput
+{
     environment: String
     locale: String
     cartTotal: Float
     currency: String
-    cardsConfig: [CardsConfig]
+    storeId: Int
+    payment_component_template_id: String
+    paymentComponentContainerId: String
+    paymentComponentConfig: [MultiSafepayPaymentComponentConfig]
     apiToken: String
-    isDebug: Boolean
+    apiTokenLifeTime: Int
+    applePayButton: MultiSafepayApplePayButton
+    googlePayButton: MultiSafepayGooglePayButton
 }

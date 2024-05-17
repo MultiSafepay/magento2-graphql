@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.4.0] - 2024-05-16
+### Added
+- PLGMAG2V2-662: Add support for [Payment components](https://docs.multisafepay.com/docs/payment-components)
+
+### Changed
+- DAVAMS-700: Refactor in3
+
 ## [3.3.0] - 2023-04-13
 ### Added
 - Add compatibility with ^3.0 version of core module and ^2.0 of frontend module

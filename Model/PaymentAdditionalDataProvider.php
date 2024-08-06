@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace MultiSafepay\ConnectGraphQl\Model;
 
 use Magento\Framework\GraphQl\Exception\GraphQlInputException;
+use Magento\Payment\Gateway\Config\Config;
 use Magento\QuoteGraphQl\Model\Cart\Payment\AdditionalDataProviderInterface;
 use MultiSafepay\Api\Issuers\Issuer;
 use MultiSafepay\ConnectCore\Model\Ui\Gateway\IdealConfigProvider;
@@ -34,6 +35,11 @@ class PaymentAdditionalDataProvider implements AdditionalDataProviderInterface
     private $myBankConfigProvider;
 
     /**
+     * @var Config
+     */
+    private $paymentConfig;
+
+    /**
      * @var string
      */
     private $providerCode;
@@ -48,10 +54,12 @@ class PaymentAdditionalDataProvider implements AdditionalDataProviderInterface
     public function __construct(
         IdealConfigProvider $idealConfigProvider,
         MyBankConfigProvider $myBankConfigProvider,
+        Config $paymentConfig,
         $providerCode = ''
     ) {
         $this->idealConfigProvider = $idealConfigProvider;
         $this->myBankConfigProvider = $myBankConfigProvider;
+        $this->paymentConfig = $paymentConfig;
         $this->providerCode = $providerCode;
     }
 
@@ -63,7 +71,8 @@ class PaymentAdditionalDataProvider implements AdditionalDataProviderInterface
      */
     public function getData(array $data): array
     {
-        if (!isset($data[$this->providerCode])) {
+        $this->paymentConfig->setMethodCode($this->providerCode);
+        if (!isset($data[$this->providerCode]) && ($this->paymentConfig->getValue('payment_type') ?? $this->paymentConfig->getValue('transaction_type') ?? 'undefined') !== 'redirect') {
             throw new GraphQlInputException(
                 __(
                     'Required parameter "%1" for "payment_method" is missing.',
@@ -72,7 +81,7 @@ class PaymentAdditionalDataProvider implements AdditionalDataProviderInterface
             );
         }
 
-        $additionalData = $data[$this->providerCode];
+        $additionalData = $data[$this->providerCode] ?? [];
 
         if ($this->providerCode === IdealConfigProvider::CODE || $this->providerCode === MyBankConfigProvider::CODE) {
             $this->validateIssuerId($additionalData);

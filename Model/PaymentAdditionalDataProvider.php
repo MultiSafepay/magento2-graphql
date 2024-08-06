@@ -18,6 +18,8 @@ use Magento\Framework\GraphQl\Exception\GraphQlInputException;
 use Magento\Payment\Gateway\Config\Config;
 use Magento\QuoteGraphQl\Model\Cart\Payment\AdditionalDataProviderInterface;
 use MultiSafepay\Api\Issuers\Issuer;
+use MultiSafepay\ConnectAdminhtml\Model\Config\Source\PaymentTypes;
+use MultiSafepay\ConnectCore\Model\Api\Builder\OrderRequestBuilder\TransactionTypeBuilder;
 use MultiSafepay\ConnectCore\Model\Ui\Gateway\IdealConfigProvider;
 use MultiSafepay\ConnectCore\Model\Ui\Gateway\MyBankConfigProvider;
 use Psr\Http\Client\ClientExceptionInterface;
@@ -72,7 +74,7 @@ class PaymentAdditionalDataProvider implements AdditionalDataProviderInterface
     public function getData(array $data): array
     {
         $this->paymentConfig->setMethodCode($this->providerCode);
-        if (!isset($data[$this->providerCode]) && ($this->paymentConfig->getValue('payment_type') ?? $this->paymentConfig->getValue('transaction_type') ?? 'undefined') !== 'redirect') {
+        if (!isset($data[$this->providerCode]) && (($this->paymentConfig->getValue('payment_type') ?? '') === PaymentTypes::PAYMENT_COMPONENT_PAYMENT_TYPE || ($this->paymentConfig->getValue('transaction_type') ?? '') === TransactionTypeBuilder::TRANSACTION_TYPE_DIRECT_VALUE)) {
             throw new GraphQlInputException(
                 __(
                     'Required parameter "%1" for "payment_method" is missing.',

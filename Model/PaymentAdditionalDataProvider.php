@@ -14,20 +14,14 @@ declare(strict_types=1);
 
 namespace MultiSafepay\ConnectGraphQl\Model;
 
+use Exception;
 use Magento\Framework\GraphQl\Exception\GraphQlInputException;
 use Magento\QuoteGraphQl\Model\Cart\Payment\AdditionalDataProviderInterface;
-use MultiSafepay\Api\Issuers\Issuer;
-use MultiSafepay\ConnectCore\Model\Ui\Gateway\IdealConfigProvider;
 use MultiSafepay\ConnectCore\Model\Ui\Gateway\MyBankConfigProvider;
 use Psr\Http\Client\ClientExceptionInterface;
 
 class PaymentAdditionalDataProvider implements AdditionalDataProviderInterface
 {
-    /**
-     * @var IdealConfigProvider
-     */
-    private $idealConfigProvider;
-
     /**
      * @var MyBankConfigProvider
      */
@@ -41,16 +35,13 @@ class PaymentAdditionalDataProvider implements AdditionalDataProviderInterface
     /**
      * PaymentAdditionalDataProvider constructor.
      *
-     * @param IdealConfigProvider $idealConfigProvider
      * @param MyBankConfigProvider $myBankConfigProvider
      * @param string $providerCode
      */
     public function __construct(
-        IdealConfigProvider $idealConfigProvider,
         MyBankConfigProvider $myBankConfigProvider,
         $providerCode = ''
     ) {
-        $this->idealConfigProvider = $idealConfigProvider;
         $this->myBankConfigProvider = $myBankConfigProvider;
         $this->providerCode = $providerCode;
     }
@@ -74,7 +65,7 @@ class PaymentAdditionalDataProvider implements AdditionalDataProviderInterface
 
         $additionalData = $data[$this->providerCode];
 
-        if ($this->providerCode === IdealConfigProvider::CODE || $this->providerCode === MyBankConfigProvider::CODE) {
+        if ($this->providerCode === MyBankConfigProvider::CODE) {
             $this->validateIssuerId($additionalData);
         }
 
@@ -84,7 +75,7 @@ class PaymentAdditionalDataProvider implements AdditionalDataProviderInterface
     /**
      * @param array $data
      * @throws GraphQlInputException
-     * @throws ClientExceptionInterface
+     * @throws Exception
      */
     private function validateIssuerId(array $data): void
     {
@@ -95,10 +86,6 @@ class PaymentAdditionalDataProvider implements AdditionalDataProviderInterface
         }
 
         $issuers = [];
-
-        if ($this->providerCode === IdealConfigProvider::CODE) {
-            $issuers = $this->idealConfigProvider->getIssuers();
-        }
 
         if ($this->providerCode === MyBankConfigProvider::CODE) {
             $issuers = $this->myBankConfigProvider->getIssuers();

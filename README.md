@@ -79,9 +79,9 @@ mutation {
     setPaymentMethodOnCart(input: {
         cart_id: "{ CART_ID }"
         payment_method: {
-            code: "multisafepay_ideal"
-            multisafepay_ideal: {
-                issuer_id: "3151"
+            code: "multisafepay_mybank"
+            multisafepay_mybank: {
+                issuer_id: "CT000003-it-1"
             }
         }
     }) {

@@ -21,7 +21,7 @@ use Magento\GraphQl\Quote\GetMaskedQuoteIdByReservedOrderId;
 use Magento\Store\Model\App\Emulation;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\TestFramework\TestCase\GraphQlAbstract;
-use MultiSafepay\ConnectCore\Model\Ui\Gateway\IdealConfigProvider;
+use MultiSafepay\ConnectCore\Model\Ui\Gateway\MyBankConfigProvider;
 
 class AvailablePaymentMethodsTest extends GraphQlAbstract
 {
@@ -37,9 +37,9 @@ class AvailablePaymentMethodsTest extends GraphQlAbstract
     private $emulation;
 
     /**
-     * @var IdealConfigProvider
+     * @var MyBankConfigProvider
      */
-    private $idealConfigProvider;
+    private $myBankConfigProvider;
 
     /**
      * @inheritdoc
@@ -49,14 +49,14 @@ class AvailablePaymentMethodsTest extends GraphQlAbstract
         $objectManager = Bootstrap::getObjectManager();
         $this->getMaskedQuoteIdByReservedOrderId = $objectManager->get(GetMaskedQuoteIdByReservedOrderId::class);
         $this->emulation = $objectManager->get(Emulation::class);
-        $this->idealConfigProvider = $objectManager->get(IdealConfigProvider::class);
+        $this->myBankConfigProvider = $objectManager->get(MyBankConfigProvider::class);
         $scopeConfig = $objectManager->get(ScopeConfigInterface::class);
         $scopeConfig->clean();
     }
 
     /**
-     * @magentoConfigFixture default_store multisafepay/general/preselected_method multisafepay_ideal
-     * @magentoConfigFixture default_store payment/multisafepay_ideal/active 1
+     * @magentoConfigFixture default_store multisafepay/general/preselected_method multisafepay_mybank
+     * @magentoConfigFixture default_store payment/multisafepay_mybank/active 1
      * @magentoConfigFixture default_store payment/multisafepay_afterpay/active 1
      * @magentoConfigFixture default_store payment/multisafepay_bancontact/active 1
      *
@@ -84,7 +84,7 @@ class AvailablePaymentMethodsTest extends GraphQlAbstract
         self::assertNotEmpty($response['cart']['available_payment_methods']);
 
         $this->emulation->startEnvironmentEmulation(1, Area::AREA_FRONTEND, true);
-        $imagePath = $this->idealConfigProvider->getImage();
+        $imagePath = $this->myBankConfigProvider->getImage();
         $this->emulation->stopEnvironmentEmulation();
 
         foreach ($response['cart']['available_payment_methods'] as $paymentMethod) {
@@ -98,7 +98,7 @@ class AvailablePaymentMethodsTest extends GraphQlAbstract
             self::assertArrayHasKey('image', $additionalData);
             self::assertArrayHasKey('is_preselected', $additionalData);
 
-            if ($paymentMethod['code'] === IdealConfigProvider::CODE) {
+            if ($paymentMethod['code'] === MyBankConfigProvider::CODE) {
                 self::assertTrue($additionalData['is_preselected']);
                 self::assertSame($imagePath, $additionalData['image']);
                 self::assertNotNull($paymentMethod['multisafepay_available_issuers']);

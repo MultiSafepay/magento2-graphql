@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.0.0] - 2024-05-16
+
+### Removed
+- PLGMAG2V2-786: Removed iDEAL issuers from GraphQL
+- Removed the dependency on the MultiSafepay_ConnectFrontend module
+
 ## [3.4.0] - 2024-05-16
 ### Added
 - PLGMAG2V2-662: Add support for [Payment components](https://docs.multisafepay.com/docs/payment-components)

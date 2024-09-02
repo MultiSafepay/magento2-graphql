@@ -4,7 +4,6 @@
     <type name="Magento\QuoteGraphQl\Model\Cart\Payment\AdditionalDataProviderPool">
         <arguments>
             <argument name="dataProviders" xsi:type="array">
-                <item name="multisafepay_ideal" xsi:type="object">MultiSafepay\ConnectGraphQl\Model\IdealAdditionalDataProvider</item>
                 <item name="multisafepay_mybank" xsi:type="object">MultiSafepay\ConnectGraphQl\Model\MyBankAdditionalDataProvider</item>
                 <item name="multisafepay_afterpay" xsi:type="object">MultiSafepay\ConnectGraphQl\Model\AfterpayAdditionalDataProvider</item>
                 <item name="multisafepay_directbanktransfer" xsi:type="object">MultiSafepay\ConnectGraphQl\Model\DirectBankTransferAdditionalDataProvider</item>
@@ -20,12 +19,6 @@
             </argument>
         </arguments>
     </type>
-
-    <virtualType name="MultiSafepay\ConnectGraphQl\Model\IdealAdditionalDataProvider" type="MultiSafepay\ConnectGraphQl\Model\PaymentAdditionalDataProvider">
-        <arguments>
-            <argument name="providerCode" xsi:type="const">MultiSafepay\ConnectCore\Model\Ui\Gateway\IdealConfigProvider::CODE</argument>
-        </arguments>
-    </virtualType>
 
     <virtualType name="MultiSafepay\ConnectGraphQl\Model\MyBankAdditionalDataProvider" type="MultiSafepay\ConnectGraphQl\Model\PaymentAdditionalDataProvider">
         <arguments>

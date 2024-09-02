@@ -22,7 +22,7 @@ use Magento\TestFramework\TestCase\GraphQl\ResponseContainsErrorsException;
 use Magento\TestFramework\TestCase\GraphQlAbstract;
 use MultiSafepay\ConnectCore\Model\Ui\Gateway\AfterpayConfigProvider;
 use MultiSafepay\ConnectCore\Model\Ui\Gateway\BancontactConfigProvider;
-use MultiSafepay\ConnectCore\Model\Ui\Gateway\IdealConfigProvider;
+use MultiSafepay\ConnectCore\Model\Ui\Gateway\MyBankConfigProvider;
 
 class SetPaymentMethodOnCartTest extends GraphQlAbstract
 {
@@ -75,7 +75,7 @@ class SetPaymentMethodOnCartTest extends GraphQlAbstract
     }
 
     /**
-     * @magentoConfigFixture default_store payment/multisafepay_ideal/active 1
+     * @magentoConfigFixture default_store payment/multisafepay_mybank/active 1
      *
      * @magentoApiDataFixture Magento/GraphQl/Catalog/_files/simple_product.php
      * @magentoApiDataFixture Magento/GraphQl/Quote/_files/guest/create_empty_cart.php
@@ -94,19 +94,19 @@ class SetPaymentMethodOnCartTest extends GraphQlAbstract
         $paymentMethods = $this->getAvailablePaymentMethodsQuery($maskedQuoteId);
 
         foreach ($paymentMethods['cart']['available_payment_methods'] as $paymentMethod) {
-            if ($paymentMethod['code'] === IdealConfigProvider::CODE) {
+            if ($paymentMethod['code'] === MyBankConfigProvider::CODE) {
                 $issuerCode = reset($paymentMethod['multisafepay_available_issuers'])['code'];
 
                 $this->expectException(ResponseContainsErrorsException::class);
                 $this->expectExceptionMessage('Please check and set the correct Issuer ID.');
-                $this->getMutationForIdeal($maskedQuoteId, 'false-issuer-code');
+                $this->getMutationForMyBank($maskedQuoteId, 'false-issuer-code');
 
-                $response = $this->getMutationForIdeal($maskedQuoteId, $issuerCode);
+                $response = $this->getMutationForMyBank($maskedQuoteId, $issuerCode);
 
                 $selectedPaymentMethod = $response['setPaymentMethodOnCart']['cart']['selected_payment_method'];
 
                 self::assertArrayHasKey('code', $selectedPaymentMethod);
-                self::assertSame(IdealConfigProvider::CODE, $selectedPaymentMethod['code']);
+                self::assertSame(MyBankConfigProvider::CODE, $selectedPaymentMethod['code']);
                 break;
             }
         }
@@ -178,9 +178,9 @@ QUERY
     /**
      * @throws Exception
      */
-    private function getMutationForIdeal($maskedQuoteId, $issuerCode = null)
+    private function getMutationForMyBank($maskedQuoteId, $issuerCode = null)
     {
-        $idealCode = IdealConfigProvider::CODE;
+        $myBankCode = MyBankConfigProvider::CODE;
 
         return $this->graphQlMutation(
             <<<QUERY
@@ -188,8 +188,8 @@ mutation {
     setPaymentMethodOnCart(input: {
         cart_id: "$maskedQuoteId"
         payment_method: {
-            code: "$idealCode"
-            $idealCode: {
+            code: "$myBankCode"
+            $myBankCode: {
                 issuer_id: "$issuerCode"
             }
         }

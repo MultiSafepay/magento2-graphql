@@ -12,11 +12,13 @@
 
 namespace MultiSafepay\ConnectGraphQl\Model\Resolver\Issuer;
 
+use Exception;
 use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Framework\GraphQl\Query\Resolver\ContextInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 use MultiSafepay\ConnectCore\Model\Ui\ConfigProviderPool;
+use MultiSafepay\ConnectCore\Model\Ui\GenericConfigProvider;
 use MultiSafepay\ConnectCore\Util\PaymentMethodUtil;
 use MultiSafepay\Api\Issuers\Issuer;
 
@@ -55,6 +57,7 @@ class AvailableIssuersForPaymentMethod implements ResolverInterface
      * @return array|null
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @throws Exception
      */
     public function resolve(
         Field $field,
@@ -69,6 +72,7 @@ class AvailableIssuersForPaymentMethod implements ResolverInterface
             return null;
         }
 
+        /** @var GenericConfigProvider $configProvider */
         $configProvider = $this->configProviderPool->getConfigProviderByCode($method);
 
         if (!$configProvider) {

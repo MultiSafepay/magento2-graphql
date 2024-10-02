@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace MultiSafepay\ConnectGraphQl\Model;
 
 use Magento\Checkout\Model\Session as CheckoutSession;
+use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use MultiSafepay\ConnectAdminhtml\Model\Config\Source\PaymentTypes;
@@ -24,6 +25,7 @@ use MultiSafepay\ConnectCore\Model\Ui\Gateway\MaestroConfigProvider;
 use MultiSafepay\ConnectCore\Model\Ui\Gateway\MastercardConfigProvider;
 use MultiSafepay\ConnectCore\Model\Ui\Gateway\VisaConfigProvider;
 use MultiSafepay\ConnectCore\Model\Ui\ConfigProviderPool;
+use MultiSafepay\ConnectCore\Model\Ui\GenericConfigProvider;
 
 class PaymentConfig
 {
@@ -76,13 +78,17 @@ class PaymentConfig
      * @param int $storeId
      *
      * @return array
+     * @throws LocalizedException
      */
     public function getCardsConfig(int $storeId): array
     {
         $result = [];
 
         foreach (self::CREDIT_CARD_PAYMENT_METHODS as $methodCode) {
-            if (!($configProvider = $this->configProviderPool->getConfigProviderByCode($methodCode))) {
+            /** @var GenericConfigProvider $configProvider */
+            $configProvider = $this->configProviderPool->getConfigProviderByCode($methodCode);
+
+            if (!$configProvider) {
                 continue;
             }
 
@@ -142,6 +148,9 @@ class PaymentConfig
             return null;
         }
 
-        return (int)$quote->getCustomer()->getId();
+        /** @var CustomerInterface $customer */
+        $customer = $quote->getCustomer();
+
+        return (int)$customer->getId();
     }
 }

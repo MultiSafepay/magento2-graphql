@@ -21,9 +21,11 @@ use Magento\Framework\GraphQl\Exception\GraphQlInputException;
 use Magento\Framework\GraphQl\Exception\GraphQlNoSuchEntityException;
 use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
+use Magento\GraphQl\Model\Query\ContextInterface;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Api\Data\CartInterface;
 use Magento\Quote\Model\MaskedQuoteIdToQuoteIdInterface;
+use Magento\Quote\Model\Quote;
 use MultiSafepay\ConnectCore\Util\PaymentMethodUtil;
 
 class RestoreQuote implements ResolverInterface
@@ -61,7 +63,17 @@ class RestoreQuote implements ResolverInterface
     }
 
     /**
-     * @inheritdoc
+     * @param Field $field
+     * @param ContextInterface $context
+     * @param ResolveInfo $info
+     * @param array|null $value
+     * @param array|null $args
+     * @return string
+     * @throws GraphQlAuthorizationException
+     * @throws GraphQlInputException
+     * @throws GraphQlNoSuchEntityException
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function resolve(
         Field $field,
@@ -97,6 +109,8 @@ class RestoreQuote implements ResolverInterface
     {
         try {
             $cartId = $this->maskedQuoteIdToQuoteId->execute($cartHash);
+
+            /** @var Quote $cart */
             $cart = $this->cartRepository->get($cartId);
         } catch (NoSuchEntityException $exception) {
             throw new GraphQlNoSuchEntityException(

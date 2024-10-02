@@ -22,7 +22,8 @@ use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 use Magento\Framework\Url\EncoderInterface;
 use Magento\Payment\Gateway\Config\Config;
-use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Payment\Model\InfoInterface;
+use Magento\Sales\Model\Order;
 use MultiSafepay\ConnectAdminhtml\Model\Config\Source\PaymentTypes;
 use MultiSafepay\ConnectCore\Model\Api\Builder\OrderRequestBuilder\TransactionTypeBuilder;
 use MultiSafepay\ConnectCore\Util\CustomReturnUrlUtil;
@@ -100,8 +101,6 @@ class PaymentUrl
      * @param array|null $args
      * @return array|null
      *
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
@@ -126,6 +125,7 @@ class PaymentUrl
             return $resolverResult;
         }
 
+        /** @var InfoInterface $payment */
         $payment = $order->getPayment();
         $transactionType = $payment->getAdditionalInformation('transaction_type');
 
@@ -149,11 +149,11 @@ class PaymentUrl
     }
 
     /**
-     * @param OrderInterface $order
+     * @param Order $order
      *
      * @return array
      */
-    private function getParameters(OrderInterface $order): array
+    private function getParameters(Order $order): array
     {
         try {
             return [

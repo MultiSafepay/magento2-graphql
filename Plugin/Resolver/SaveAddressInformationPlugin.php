@@ -15,13 +15,13 @@ declare(strict_types=1);
 namespace MultiSafepay\ConnectGraphQl\Plugin\Resolver;
 
 use Magento\Framework\App\Area;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Query\Resolver\Value;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 use Magento\Store\Model\App\Emulation;
 use MultiSafepay\ConnectCore\Model\Ui\ConfigProviderPool;
 use MultiSafepay\ConnectCore\Util\PaymentMethodUtil;
-use ScandiPWA\QuoteGraphQl\Model\Resolver\SaveAddressInformation;
 
 class SaveAddressInformationPlugin
 {
@@ -58,7 +58,7 @@ class SaveAddressInformationPlugin
     }
 
     /**
-     * @param SaveAddressInformation $subject
+     * @param \ScandiPWA\QuoteGraphQl\Model\Resolver\SaveAddressInformation $subject
      * @param $resolverResult
      * @param Field $field
      * @param $context
@@ -69,9 +69,10 @@ class SaveAddressInformationPlugin
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @throws NoSuchEntityException
      */
     public function afterResolve(
-        SaveAddressInformation $subject,
+        \ScandiPWA\QuoteGraphQl\Model\Resolver\SaveAddressInformation $subject,
         $resolverResult,
         Field $field,
         $context,

@@ -1,0 +1,9 @@
+parameters:
+    level: 2
+    errorFormat: github
+    paths:
+        - .
+    excludePaths:
+        - etc
+        - Test
+        - Plugin/Resolver/SaveAddressInformationPlugin.php

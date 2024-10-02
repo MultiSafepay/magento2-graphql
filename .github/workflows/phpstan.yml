@@ -1,0 +1,45 @@
+name: Magento 2 PHPStan
+on: [push]
+
+jobs:
+  phpstan:
+    name: PHPStan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+        env:
+          COMPOSER_AUTH_JSON: |
+            {
+              "http-basic": {
+                "repo.magento.com": {
+                  "username": "${{ secrets.MAGENTO_MARKETPLACE_USERNAME }}",
+                  "password": "${{ secrets.MAGENTO_MARKETPLACE_PASSWORD }}"
+                }
+              }
+            }
+      - uses: actions/checkout@v4
+      - name: Create composer project
+        run: composer create-project --no-install --no-interaction --no-plugins --repository-url=https://repo-magento-mirror.fooman.co.nz/ magento/project-community-edition:2.4.5-p8 /home/runner/work/magento
+      - name: Add composer plugins
+        working-directory: /home/runner/work/magento
+        run: composer config --no-plugins allow-plugins true
+      - name: Add module to composer
+        working-directory: /home/runner/work/magento
+        run: composer require multisafepay/magento2-graphql --no-update --no-interaction
+      - name: Install composer dependencies
+        working-directory: /home/runner/work/magento
+        run: composer install --no-interaction
+      - name: Install PHPStan extension installer
+        working-directory: /home/runner/work/magento
+        run: composer require --dev phpstan/extension-installer
+      - name: Install PHPStan Magento extension
+        working-directory: /home/runner/work/magento
+        run: composer require --dev bitexpert/phpstan-magento
+      - name: Move repository content
+        run: cp -r -f ${{ github.workspace }}/* /home/runner/work/magento/vendor/multisafepay/magento2-graphql
+      - name: Run PHPStan
+        working-directory: /home/runner/work/magento
+        run: vendor/bin/phpstan analyse -c vendor/multisafepay/magento2-graphql/phpstan.neon --error-format github

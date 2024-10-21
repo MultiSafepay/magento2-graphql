@@ -23,9 +23,58 @@ jobs:
       - uses: actions/checkout@v4
       - name: Create composer project
         run: composer create-project --no-install --no-interaction --no-plugins --repository-url=https://repo-magento-mirror.fooman.co.nz/ magento/project-community-edition:2.4.5-p8 /home/runner/work/magento
+      - name: Create magento2-graphql directory in package-source
+        run: mkdir -p /home/runner/work/magento/package-source/multisafepay/magento2-graphql
+      - name: Move repository content
+        run: cp -r -f ${{ github.workspace }}/* /home/runner/work/magento/package-source/multisafepay/magento2-graphql
+      - name: Checkout Magento 2 Adminhtml Repository
+        continue-on-error: true
+        uses: actions/checkout@v4
+        with:
+          repository: multisafepay/magento2-internal-adminhtml
+          token: ${{ secrets.GLOBAL_GITHUB_TOKEN }}
+          ref: ${{ github.ref_name }}
+      - name: Create magento2-adminhtml directory in package-source
+        if: success()
+        run: mkdir -p /home/runner/work/magento/package-source/multisafepay/magento2-adminhtml
+      - name: Move Magento 2 Adminhtml Repository content
+        if: success()
+        continue-on-error: true
+        run: cp -r -f ${{ github.workspace }}/* /home/runner/work/magento/package-source/multisafepay/magento2-adminhtml
+      - name: Checkout Magento 2 Core Repository
+        continue-on-error: true
+        uses: actions/checkout@v4
+        with:
+          repository: multisafepay/magento2-internal-core
+          token: ${{ secrets.GLOBAL_GITHUB_TOKEN }}
+          ref: ${{ github.ref_name }}
+      - name: Create magento2-core directory in package-source
+        if: success()
+        run: mkdir -p /home/runner/work/magento/package-source/multisafepay/magento2-core
+      - name: Move Magento 2 Core Repository content
+        if: success()
+        continue-on-error: true
+        run: cp -r -f ${{ github.workspace }}/* /home/runner/work/magento/package-source/multisafepay/magento2-core
+      - name: Checkout PHP-SDK
+        continue-on-error: true
+        uses: actions/checkout@v4
+        with:
+          repository: multisafepay/php-sdk-internal
+          token: ${{ secrets.GLOBAL_GITHUB_TOKEN }}
+          ref: ${{ github.ref_name }}
+      - name: Create php-sdk directory in package-source
+        if: success()
+        run: mkdir -p /home/runner/work/magento/package-source/multisafepay/php-sdk
+      - name: Move PHP-SDK Repository content
+        if: success()
+        continue-on-error: true
+        run: cp -r -f ${{ github.workspace }}/* /home/runner/work/magento/package-source/multisafepay/php-sdk
       - name: Add composer plugins
         working-directory: /home/runner/work/magento
         run: composer config --no-plugins allow-plugins true
+      - name: Add MultiSafepay packages to Composer
+        working-directory: /home/runner/work/magento
+        run: composer config repositories.multisafepay "path" "package-source/multisafepay/*"
       - name: Add module to composer
         working-directory: /home/runner/work/magento
         run: composer require multisafepay/magento2-graphql --no-update --no-interaction
@@ -38,8 +87,6 @@ jobs:
       - name: Install PHPStan Magento extension
         working-directory: /home/runner/work/magento
         run: composer require --dev bitexpert/phpstan-magento
-      - name: Move repository content
-        run: cp -r -f ${{ github.workspace }}/* /home/runner/work/magento/vendor/multisafepay/magento2-graphql
       - name: Run PHPStan
         working-directory: /home/runner/work/magento
         run: vendor/bin/phpstan analyse -c vendor/multisafepay/magento2-graphql/phpstan.neon --error-format github

@@ -49,21 +49,11 @@ class PaymentAdditionalDataProvider implements AdditionalDataProviderInterface
     /**
      * @param array $data
      * @return array
-     * @throws ClientExceptionInterface
      * @throws GraphQlInputException
      */
     public function getData(array $data): array
     {
-        if (!isset($data[$this->providerCode])) {
-            throw new GraphQlInputException(
-                __(
-                    'Required parameter "%1" for "payment_method" is missing.',
-                    $this->providerCode
-                )
-            );
-        }
-
-        $additionalData = $data[$this->providerCode];
+        $additionalData = $data[$this->providerCode] ?? [];
 
         if ($this->providerCode === MyBankConfigProvider::CODE) {
             $this->validateIssuerId($additionalData);

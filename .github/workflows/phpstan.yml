@@ -62,6 +62,7 @@ jobs:
           repository: multisafepay/php-sdk-internal
           token: ${{ secrets.GLOBAL_GITHUB_TOKEN }}
           ref: ${{ github.ref_name }}
+          fetch-tags: false
       - name: Create php-sdk directory in package-source
         if: success()
         run: mkdir -p /home/runner/work/magento/package-source/multisafepay/php-sdk

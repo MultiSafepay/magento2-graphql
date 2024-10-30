@@ -4,10 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [4.0.1] - 2024-10-30
+### Fixed
+- PLGMAG2V2-800: Fixed an error when trying to place a redirect order using a payment method which also supports Payment Components (thanks to @indykoning)
 
 ## [4.0.0] - 2024-05-16
-
 ### Removed
 - PLGMAG2V2-786: Removed iDEAL issuers from GraphQL
 - Removed the dependency on the MultiSafepay_ConnectFrontend module

@@ -43,6 +43,7 @@ query {
             code
             multisafepay_additional_data {
                 image
+                instructions
                 is_preselected
             }
             multisafepay_available_issuers {
@@ -67,6 +68,7 @@ query {
             }
             multisafepay_additional_data {
                 image
+                instructions
                 is_preselected
             }
         }

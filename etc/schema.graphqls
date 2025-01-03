@@ -100,6 +100,7 @@ type MultisafepayIssuer {
 type MultisafepayAdditionalData {
     image: String
     is_preselected: Boolean
+    instructions: String
 }
 
 type PaymentMethod @doc(description: "Get meta data for MultiSafepay payment methods in ScandiPWA queries") {

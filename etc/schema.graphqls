@@ -37,7 +37,6 @@ input PaymentMethodInput {
     multisafepay_directbanktransfer: MultisafepayDirectbanktransferInput @doc(description:"Required input for Direct Bank Transfer payments")
     multisafepay_directdebit: MultisafepayDirectdebitInput @doc(description:"Required input for Direct Debit payments")
     multisafepay_einvoicing: MultisafepayEinvoicingInput @doc(description: "Required input type for E-Invoicing payments")
-    multisafepay_in3: MultisafepayIn3Input @doc(description:"Required input for in3 payments")
     multisafepay_payafter: MultisafepayPayafterInput @doc(description:"Required input type for Pay After Delivery payments")
     multisafepay_creditcard: MultisafepayPaymentComponentInput @doc(description:"Required input for Credit Card payments")
     multisafepay_maestro: MultisafepayPaymentComponentInput @doc(description:"Required input for Maestro payments")
@@ -48,10 +47,6 @@ input PaymentMethodInput {
 
 input MultisafepayIssuerInput @doc(description:"Required input for MultiSafepay MyBank payments") {
     issuer_id: String @doc(description:"The MyBank issuer id")
-}
-
-input MultisafepayIn3Input @doc(description:"Required input for MultiSafepay in3 payments") {
-    gender: String! @doc(description:"Gender of the customer")
 }
 
 input MultisafepayAfterpayInput @doc(description:"Required input for MultiSafepay Afterpay payments") {

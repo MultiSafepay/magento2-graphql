@@ -72,7 +72,7 @@ class PaymentComponentData implements ResolverInterface
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function resolve(Field $field, $context, ResolveInfo $info, array $value = null, array $args = null): array
+    public function resolve(Field $field, $context, ResolveInfo $info, ?array $value = null, ?array $args = null): array
     {
         $maskedCartId = $args['cart_id'];
         $cartId = $this->maskedQuoteIdToQuoteId->execute($maskedCartId);

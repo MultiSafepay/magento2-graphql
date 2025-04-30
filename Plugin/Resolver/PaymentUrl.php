@@ -110,8 +110,8 @@ class PaymentUrl
         Field $field,
         $context,
         ResolveInfo $info,
-        array $value = null,
-        array $args = null
+        ?array $value = null,
+        ?array $args = null
     ): ?array {
         if (array_key_exists('error', $resolverResult) && $resolverResult['error']
             || $this->config->getValue('payment_type') !== PaymentTypes::PAYMENT_COMPONENT_PAYMENT_TYPE

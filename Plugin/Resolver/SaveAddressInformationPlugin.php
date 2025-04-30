@@ -77,8 +77,8 @@ class SaveAddressInformationPlugin
         Field $field,
         $context,
         ResolveInfo $info,
-        array $value = null,
-        array $args = null
+        ?array $value = null,
+        ?array $args = null
     ) {
         if ($resolverResult && is_array($resolverResult) && isset($resolverResult['payment_methods'])) {
             $storeId = (int)$context->getExtensionAttributes()->getStore()->getId();

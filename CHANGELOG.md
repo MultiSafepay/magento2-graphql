@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.1.0] - 2025-05-01
+### Added
+- PLGMAG2V2-814: Add instruction field for payment methods
+
+### Fixed
+- PLGMAG2V2-842: Fix PHP 8.4 deprecations
+
+### Removed
+- DAVAMS-840: Remove gender requirement for in3
+
 ## [4.0.1] - 2024-10-30
 ### Fixed
 - PLGMAG2V2-800: Fixed an error when trying to place a redirect order using a payment method which also supports Payment Components (thanks to @indykoning)

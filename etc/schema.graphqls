@@ -207,4 +207,5 @@ type MultisafepayPaymentRequestDataOutput
     apiTokenLifeTime: Int
     applePayButton: MultiSafepayApplePayButton
     googlePayButton: MultiSafepayGooglePayButton
+    debug_mode: Boolean
 }
